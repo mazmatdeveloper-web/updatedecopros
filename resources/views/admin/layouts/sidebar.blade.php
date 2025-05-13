@@ -44,6 +44,13 @@
           <span>Add Availability</span>
         </a>
       </li>
+
+      <li>
+        <a href="{{ route('add.zipcode') }}">
+        <iconify-icon icon="tabler:building" class="menu-icon"></iconify-icon>
+          <span>Zipcodes</span>
+        </a>
+      </li>
     </ul>
   </div>
 

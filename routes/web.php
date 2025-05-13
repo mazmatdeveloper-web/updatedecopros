@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CleanerController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,7 +12,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
 Route::get('/availability/create', [AvailabilityController::class, 'create'])->name('availability.create');
 Route::post('/availability/store', [AvailabilityController::class, 'store'])->name('availability.store');
@@ -23,3 +24,5 @@ Route::post('/book-appointment', [CleanerController::class, 'bookAppointment'])-
 Route::get('add-cleaner',[CleanerController::class,'add_cleaner'])->name('add.cleaner');
 Route::post('insert-cleaner', [CleanerController::class, 'insert_cleaner'])->name('insert.cleaner');
 Route::get('add-cleaner-availability',[CleanerController::class,'add_cleaner_availability'])->name('add.cleaner.availability');
+Route::get('add-zipcode',[AdminController::class,'zipcode'])->name('add.zipcode');
+Route::post('insert-zipcode',[AdminController::class,'insert_zipcode'])->name('insert.zipcode');

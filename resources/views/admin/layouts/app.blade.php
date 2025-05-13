@@ -36,6 +36,9 @@
   <link rel="stylesheet" href="{{asset('assets/css/lib/audioplayer.css')}}">
   <!-- main css -->
   <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
  
   <style>
     h2#swal2-title {
