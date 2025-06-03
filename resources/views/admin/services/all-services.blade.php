@@ -4,10 +4,10 @@
 
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-        <h6 class="fw-semibold mb-0">Zipcodes</h6>
+        <h6 class="fw-semibold mb-0">Services</h6>
         
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#zipcodeModal">
-        Add New Zipcode
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cleaneraddModal">
+        Add New Service
         </button>
     </div>
 
@@ -29,21 +29,31 @@
     @endif
 
     <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                    <table class='table' border="1" cellpadding="10" cellspacing="0" style='width:100%;'>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>ZIP Code</th>
+                                <th>Service</th>
+                                <th>Description</th>
+                                <th>Price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($zipcodes as $index => $zipcode)
+                            @forelse ($services as $index => $service)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $zipcode->codes }}</td>
+                                    <td>{{ $service->service_name }}</td>
+                                    <td>
+                                      @if($service->description == null)
+                                      --
+                                      @else
+                                      {{ $service->description }}
+                                      @endif
+                                    </td>
+                                    <td>${{ $service->price }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -51,6 +61,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
+                        
                     </table>
                 </div>
             </div>
@@ -59,23 +70,31 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="zipcodeModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true">
+<div class="modal fade" id="cleaneraddModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h5 class="modal-title" id="zipcodeModalLabel">Add New Zipcode</h5>
+        <h5 class="modal-title" id="zipcodeModalLabel">Add New Service</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-        <form action="{{ route('insert.zipcode') }}" method='POST'>
+        <form action="{{ route('insert.service') }}" method='POST'>
           @csrf
           <div class="mb-3">
-            <label class="form-label">Add Zipcode</label>
-            <input type="text" name="codes" class="form-control" placeholder="33004">
+            <label class="form-label">Service Name</label>
+            <input type="text" name="service_name" class="form-control" placeholder="Service Name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Price</label>
+            <input type="text" name="price" class="form-control" placeholder="$$$">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" id="description" class='form-control' rows="4"></textarea>
           </div>
           <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">Submit</button>

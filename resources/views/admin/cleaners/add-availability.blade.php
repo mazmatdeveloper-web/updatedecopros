@@ -51,6 +51,10 @@
                                 <option value="60">1 hour</option>
                                 <option value="90">1.5 hours</option>
                                 <option value="120" selected>2 hours</option>
+                                <option value="150" selected>2.5 hours</option>
+                                <option value="180" selected>3 hours</option>
+                                <option value="210" selected>3.5 hours</option>
+                                <option value="240" selected>4 hours</option>
                             </select>
                         </div>
                     </div>
@@ -75,6 +79,10 @@
                                         <option value="60">1 hour</option>
                                         <option value="90">1.5 hours</option>
                                         <option value="120" selected>2 hours</option>
+                                        <option value="150" selected>2.5 hours</option>
+                                        <option value="180" selected>3 hours</option>
+                                        <option value="210" selected>3.5 hours</option>
+                                        <option value="240" selected>4 hours</option>
                                     </select>
                                 </div>
                             </div>
