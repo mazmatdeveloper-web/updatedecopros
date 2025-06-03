@@ -94,6 +94,12 @@ class CleanerController extends Controller
 
     /* Admin Controllers */
 
+    public function show_cleaners(Request $request)
+    {
+        $cleaners = Cleaner::all();
+        return view('admin.cleaners.all-cleaners', compact('cleaners'));
+    }
+
     public function add_cleaner()
     {
         return view('admin.cleaners.add-cleaner');
@@ -114,7 +120,7 @@ class CleanerController extends Controller
             'phone' => 'nullable',
             'bio' => 'nullable',
             'price' => 'required|numeric',
-            'profile_picture' => 'nullable|image|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = User::create([
@@ -144,5 +150,14 @@ class CleanerController extends Controller
         ->timerProgressBar()
         ->autoClose(500000);
         return redirect()->back()->withErrors($validator)->withInput();;
+    }
+
+
+    // cleaner profile
+
+    public function cleanerProfile($id)
+    {
+        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service'])->findOrFail($id);
+        return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 }

@@ -4,19 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AvailableDate extends Model
+class Service extends Model
 {
     protected $fillable =[
-        'cleaner_id',
-        'dates'
+        'service_name',
+        'price',
+        'description',
+        'cleaner_id'
     ];
+    
     public function cleaner()
     {
         return $this->belongsTo(Cleaner::class);
-    }
-
-    public function timeSlots()
-    {
-        return $this->hasMany(AvailableTimeSlot::class,'available_date_id');
     }
 }
