@@ -29,6 +29,9 @@ Route::post('insert-cleaner', [CleanerController::class, 'insert_cleaner'])->nam
 Route::get('add-cleaner-availability',[CleanerController::class,'add_cleaner_availability'])->name('add.cleaner.availability');
 Route::get('add-zipcode',[AdminController::class,'zipcode'])->name('add.zipcode');
 Route::post('insert-zipcode',[AdminController::class,'insert_zipcode'])->name('insert.zipcode');
+Route::get('delete-zipcode/{id}',[AdminController::class,'delete_zipcode'])->name('delete.zipcode');
+Route::get('edit-zipcode/{id}',[AdminController::class,'edit_zipcode'])->name('edit.zipcode');
+Route::post('update-zipcode/{id}', [AdminController::class, 'update_zipcode'])->name('update.zipcode');
 Route::get('services',[AdminController::class,'show_service'])->name('all.services');
 
 Route::get('cleaners',[CleanerController::class,'show_cleaners'])->name('all.cleaners');
@@ -52,8 +55,14 @@ Route::post('insert-service',[FiltersController::class,'insert_service'])->name(
 
 // Cleaner Profile
 Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
+Route::get('cleaners/delete/{id}', [CleanerController::class, 'delete_cleaner'])->name('cleaners.delete');
+Route::get('cleaners/edit/{id}', [CleanerController::class, 'edit_cleaner'])->name('cleaners.edit');
+Route::post('cleaners/update/{id}', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
 
 // addons
 
 Route::get('addons',[AdminController::class,'add_on'])->name('addons');
 Route::post('insert-addon',[AdminController::class,'insert_addon'])->name('insert.addon');
+Route::get('delete-addon/{id}',[AdminController::class,'delete_addon'])->name('delete.addon');
+Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.addon');
+Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');

@@ -38,6 +38,42 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function delete_zipcode($id)
+    {
+        $zipcode = Zipcode::findOrFail($id);
+        $zipcode->delete();
+
+        Alert::toast('Zipcode Deleted Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(5000);
+        return redirect()->back();
+    }
+
+    public function edit_zipcode($id)
+    {
+        $zipcode = Zipcode::findOrFail($id);
+        return view('admin.zipcode.add-zipcode', compact('zipcode'));
+    }
+
+    public function update_zipcode(Request $request, $id)
+    {
+        $request->validate([
+            'codes' => 'required|unique:zipcodes,codes,'.$id.'|regex:/^\d{5}$/'
+        ]);
+
+        $zipcode = Zipcode::findOrFail($id);
+        $zipcode->update([
+            'codes' => $request->codes
+        ]);
+
+        Alert::toast('Zipcode Updated Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(5000);
+        return redirect()->route('add.zipcode');
+    }
+
     public function show_service()
     {
         $services = Service::latest()->get();
@@ -74,7 +110,7 @@ class AdminController extends Controller
     public function insert_addon(Request $request)
     {
         $request->validate([
-            'addon_name' => 'required|string|max:255',
+            'addon_name' => 'required|unique:addons|string|max:255',
             'price' => 'required|numeric',
         ]);
 
@@ -88,6 +124,44 @@ class AdminController extends Controller
         ->timerProgressBar()
         ->autoClose(3000);
         return redirect()->back();   
+    }
+
+    public function edit_addon($id)
+    {
+        $addon = Addon::findOrFail($id);
+        return view('admin.addons.index', compact('addon'));
+    }
+
+    public function update_addon(Request $request, $id)
+    {
+        $request->validate([
+            'addon_name' => 'required|unique:addons|string|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        $addon = Addon::findOrFail($id);
+        $addon->update([
+            'addon_name' => $request->addon_name,
+            'price' => $request->price,
+        ]);
+
+        Alert::toast('Addon Updated Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(3000);
+        return redirect()->route('addons');
+    }
+
+    public function delete_addon($id)
+    {
+        $addon = Addon::findOrFail($id);
+        $addon->delete();
+
+        Alert::toast('Addon Deleted Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(3000);
+        return redirect()->back();
     }
     
 }

@@ -1,13 +1,11 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center gap-3 mb-24 justify-content-between">
         <div>
-    @if ($cleaner->profile_picture)
-        <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" class='cleaner-profile-picture'>
-    @endif    
-    <h6 class="fw-semibold mb-0">{{ $cleaner->name }}</h6>
+    <?php if($cleaner->profile_picture): ?>
+        <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" class='cleaner-profile-picture'>
+    <?php endif; ?>    
+    <h6 class="fw-semibold mb-0"><?php echo e($cleaner->name); ?></h6>
     </div>
     <div>
         <button  
@@ -69,18 +67,18 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bed_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bed_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->beds }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->beds); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -113,18 +111,18 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bath_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bath_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->baths }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->baths); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -156,17 +154,17 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->service as $index => $service)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->service; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $service->service_name }}</td>
-                                                            <td>${{ number_format($service->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($service->service_name); ?></td>
+                                                            <td>$<?php echo e(number_format($service->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="4" class="text-center">No services available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -184,14 +182,14 @@ class="btn btn-primary">Update Profile</button>
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="dynamicForm" method="POST" action="">
-        @csrf
+        <?php echo csrf_field(); ?>
         <div class="modal-header">
           <h6 class="modal-title" id="optionModalLabel">Add Option</h6>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-          <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+          <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
 
           <!-- Sqft -->
           <div class="mb-3" id="sqftGroup">
@@ -231,8 +229,7 @@ class="btn btn-primary">Update Profile</button>
     </div>
   </div>
 </div>
-{{-- 
-Update User Profile --}}
+
 
 <div class="modal fade" id="cleaneraddModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -246,8 +243,8 @@ Update User Profile --}}
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-      <form action="{{ route('insert.cleaner') }}" method='POST' enctype="multipart/form-data">
-            @csrf
+      <form action="<?php echo e(route('insert.cleaner')); ?>" method='POST' enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <label class="form-label">Full Name</label>
@@ -294,13 +291,13 @@ Update User Profile --}}
 <script>
 const forms = {
   bedroom: {
-    action: '{{ route("insert.bed.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bed.areasqft.options")); ?>'
   },
   bathroom: {
-    action: '{{ route("insert.bath.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bath.areasqft.options")); ?>'
   },
   service: {
-    action: '{{ route("insert.service") }}'
+    action: '<?php echo e(route("insert.service")); ?>'
   }
 };
 
@@ -350,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('input[name="price"]').value = price;
 
             // Optional: set form action to update instead of insert
-            document.querySelector('#cleaneraddModal form').setAttribute('action', '{{ route("cleaners.update", ["id" => $cleaner->id]) }}');
+            document.querySelector('#cleaneraddModal form').setAttribute('action', '<?php echo e(route("cleaners.update", ["id" => $cleaner->id])); ?>');
         });
     });
 });
@@ -359,4 +356,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros\echopros\resources\views/admin/cleaners/single_cleaner/profile.blade.php ENDPATH**/ ?>

@@ -1,6 +1,4 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
@@ -11,13 +9,13 @@
         </button>
     </div>
 
-    @if ($errors->any())
+    <?php if($errors->any()): ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Something went wrong...',
-            html: `{!! implode('<br>', $errors->all()) !!}`,
+            html: `<?php echo implode('<br>', $errors->all()); ?>`,
             position: 'top-end',
             toast: true,
             timer: 500000,
@@ -26,7 +24,7 @@
             timerProgressBar: true,
         });
     </script>
-    @endif
+    <?php endif; ?>
 
     <div class="row d-flex justify-content-center">
         <div class="col-md-12">
@@ -42,34 +40,34 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($addons as $index => $addon)
+                            <?php $__empty_1 = true; $__currentLoopData = $addons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $addon->addon_name }}</td>
-                                    <td>${{ $addon->price }}</td>
+                                    <td><?php echo e($index + 1); ?></td>
+                                    <td><?php echo e($addon->addon_name); ?></td>
+                                    <td>$<?php echo e($addon->price); ?></td>
                                     <td style="display:flex;gap:10px;"><button type="button" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
                                             <iconify-icon class="editZipBtn" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editzipcodeModal" 
-                                        data-id="{{ $addon->id }}" 
-                                        data-name="{{ $addon->addon_name }}"
-                                        data-price="{{ $addon->price }}"
+                                        data-id="<?php echo e($addon->id); ?>" 
+                                        data-name="<?php echo e($addon->addon_name); ?>"
+                                        data-price="<?php echo e($addon->price); ?>"
                                         icon="lucide:edit" class="menu-icon"></iconify-icon>
                                         </button>
                                         <form>  
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $addon->id }}">
-                                            <button type="submit" formaction="{{ route('delete.addon', ['id' => $addon ->id]) }}" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?php echo e($addon->id); ?>">
+                                            <button type="submit" formaction="<?php echo e(route('delete.addon', ['id' => $addon ->id])); ?>" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
                                             <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                         </button>
                                         </form>
                                       </td>
                                 </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
                                     <td colspan="3">No addons found.</td>
                                 </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                         
                     </table>
@@ -92,8 +90,8 @@
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-      <form action="{{ route('insert.addon') }}" method='POST'>
-            @csrf
+      <form action="<?php echo e(route('insert.addon')); ?>" method='POST'>
+            <?php echo csrf_field(); ?>
                 <div class="row gy-3">
                     <div class="col-md-12">
                         <label class="form-label">Addon Name</label>
@@ -127,8 +125,8 @@
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-        <form method="POST" id="editZipForm" action="{{ route('update.addon', 0) }}">
-          @csrf
+        <form method="POST" id="editZipForm" action="<?php echo e(route('update.addon', 0)); ?>">
+          <?php echo csrf_field(); ?>
           <input type="hidden" name="id" id="editzipcode_id">
           <div class="mb-3">
             <label class="form-label">Addon</label>
@@ -174,4 +172,5 @@
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros\echopros\resources\views/admin/addons/index.blade.php ENDPATH**/ ?>

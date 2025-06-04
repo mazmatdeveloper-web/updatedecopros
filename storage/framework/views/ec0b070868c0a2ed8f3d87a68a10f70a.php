@@ -1,6 +1,4 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
@@ -11,13 +9,13 @@
         </button>
     </div>
 
-    @if ($errors->any())
+    <?php if($errors->any()): ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Something went wrong...',
-            html: `{!! implode('<br>', $errors->all()) !!}`,
+            html: `<?php echo implode('<br>', $errors->all()); ?>`,
             position: 'top-end',
             toast: true,
             timer: 500000,
@@ -26,7 +24,7 @@
             timerProgressBar: true,
         });
     </script>
-    @endif
+    <?php endif; ?>
 
     <div class="row d-flex justify-content-center">
         <div class="col-md-12">
@@ -44,46 +42,48 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($cleaners as $index => $cleaner)
+                            <?php $__empty_1 = true; $__currentLoopData = $cleaners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $cleaner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
+                                    <td><?php echo e($index + 1); ?></td>
                                     <td> 
                                         <div class='d-flex align-items-center gap-2'>
-                                        @if ($cleaner->profile_picture)
-                                            <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" class="cleaner-table-profile-picture">
-                                        @endif   
-                                        {{ $cleaner->name }}
+                                        <?php if($cleaner->profile_picture): ?>
+                                            <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" class="cleaner-table-profile-picture">
+                                        <?php endif; ?>   
+                                        <?php echo e($cleaner->name); ?>
+
                                         </div>
                                     </td>
-                                    <td>{{ $cleaner->email }} <br> {{ $cleaner->phone }}</td>
+                                    <td><?php echo e($cleaner->email); ?> <br> <?php echo e($cleaner->phone); ?></td>
                                     <td>
-                                        @if($cleaner->bio == null)
+                                        <?php if($cleaner->bio == null): ?>
                                         No Bio
-                                        @else
-                                        {{ $cleaner->bio }}
-                                        @endif
+                                        <?php else: ?>
+                                        <?php echo e($cleaner->bio); ?>
+
+                                        <?php endif; ?>
                                     </td>
-                                    <td>${{ $cleaner->price }}</td>
+                                    <td>$<?php echo e($cleaner->price); ?></td>
                                     <td style="display:flex;gap:10px;" >
                                         <form>  
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $cleaner->id }}">
-                                            <button type="submit" formaction="{{ route('cleaners.delete', ['id' => $cleaner ->id]) }}" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?php echo e($cleaner->id); ?>">
+                                            <button type="submit" formaction="<?php echo e(route('cleaners.delete', ['id' => $cleaner ->id])); ?>" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
                                             <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                         </button>
                                         </form>
-                                    <a href="{{ route('cleaners.profile',$cleaner->id) }}">
+                                    <a href="<?php echo e(route('cleaners.profile',$cleaner->id)); ?>">
                                     <button type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
                                     <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                                 </button>
                             </a>
                             </td>
                                 </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
                                     <td colspan="3">No cleaners found.</td>
                                 </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                         
                     </table>
@@ -106,8 +106,8 @@
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-      <form action="{{ route('insert.cleaner') }}" method='POST' enctype="multipart/form-data">
-            @csrf
+      <form action="<?php echo e(route('insert.cleaner')); ?>" method='POST' enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <label class="form-label">Full Name</label>
@@ -150,4 +150,5 @@
   </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros1\echopros\resources\views/admin/cleaners/all-cleaners.blade.php ENDPATH**/ ?>

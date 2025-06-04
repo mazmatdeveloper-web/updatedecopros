@@ -160,4 +160,59 @@ class CleanerController extends Controller
         $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service'])->findOrFail($id);
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
+
+    public function delete_cleaner($id)
+    {
+        $cleaner = Cleaner::findOrFail($id);
+        $cleaner->delete();
+        
+        Alert::toast('Cleaner Deleted Successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(5000);
+        
+        return redirect()->back();
+    }
+
+    public function edit_cleaner($id)
+    {
+        $cleaner = Cleaner::findOrFail($id);
+        return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
+    }
+
+    public function update_cleaner(Request $request, $id)
+    {
+        $cleaner = Cleaner::findOrFail($id);
+        
+        $validator = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $cleaner->user_id,
+            'phone' => 'nullable',
+            'bio' => 'nullable',
+            'price' => 'required|numeric',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $cleaner->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'bio' => $request->bio,
+            'price' => $request->price,
+        ]);
+
+        if ($request->hasFile('profile_picture')) {
+            $profilePicturePath = $request->file('profile_picture')->store('cleaners', 'public');
+            $cleaner->profile_picture = $profilePicturePath;
+        }
+
+        $cleaner->save();
+
+        Alert::toast('Cleaner Updated Successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(5000);
+        
+        return redirect()->route('all.cleaners');
+    }
 }
