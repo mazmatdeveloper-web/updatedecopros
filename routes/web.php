@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
+use App\Http\Controllers\CustomerController;
 
 Route::get('/', function () {
     return view('home');
@@ -57,7 +58,7 @@ Route::post('insert-service',[FiltersController::class,'insert_service'])->name(
 Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
 Route::get('cleaners/delete/{id}', [CleanerController::class, 'delete_cleaner'])->name('cleaners.delete');
 Route::get('cleaners/edit/{id}', [CleanerController::class, 'edit_cleaner'])->name('cleaners.edit');
-Route::post('cleaners/update/{id}', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
+Route::post('cleaners/update', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
 
 // addons
 
@@ -66,3 +67,6 @@ Route::post('insert-addon',[AdminController::class,'insert_addon'])->name('inser
 Route::get('delete-addon/{id}',[AdminController::class,'delete_addon'])->name('delete.addon');
 Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.addon');
 Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');
+
+Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
+

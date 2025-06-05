@@ -1,24 +1,22 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center gap-3 mb-24 justify-content-between">
         <div>
-    @if ($cleaner->profile_picture)
-        <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" class='cleaner-profile-picture'>
-    @endif    
-    <h6 class="fw-semibold mb-0">{{ $cleaner->name }}</h6>
+    <?php if($cleaner->profile_picture): ?>
+        <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" class='cleaner-profile-picture'>
+    <?php endif; ?>    
+    <h6 class="fw-semibold mb-0"><?php echo e($cleaner->name); ?></h6>
     </div>
     <div>
         <button  
 data-bs-toggle="modal" 
   data-bs-target="#cleaneraddModal"
-  data-id="{{ $cleaner->id }}" 
-  data-name="{{$cleaner->name}}" 
-  data-email="{{$cleaner->email}}"
-  data-phone="{{$cleaner->phone}}"
-  data-bio="{{$cleaner->bio}}"
-  data-price="{{$cleaner->price}}"
+  data-id="<?php echo e($cleaner->id); ?>" 
+  data-name="<?php echo e($cleaner->name); ?>" 
+  data-email="<?php echo e($cleaner->email); ?>"
+  data-phone="<?php echo e($cleaner->phone); ?>"
+  data-bio="<?php echo e($cleaner->bio); ?>"
+  data-price="<?php echo e($cleaner->price); ?>"
 class="btn btn-primary">Update Profile</button>
     </div>
     </div>
@@ -73,18 +71,18 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bed_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bed_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->beds }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->beds); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -117,18 +115,18 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bath_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bath_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->baths }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->baths); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -160,17 +158,17 @@ class="btn btn-primary">Update Profile</button>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->service as $index => $service)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->service; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $service->service_name }}</td>
-                                                            <td>${{ number_format($service->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($service->service_name); ?></td>
+                                                            <td>$<?php echo e(number_format($service->price, 2)); ?></td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="4" class="text-center">No services available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -189,23 +187,25 @@ class="btn btn-primary">Update Profile</button>
                                     <div class="card">
                                         <div class="card-body">
                                             <table class='table w-100'>
-                                                @forelse($cleaner->availableDates as $date)
+                                                <?php $__empty_1 = true; $__currentLoopData = $cleaner->availableDates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                     <tr>
-                                                        <th>{{ \Carbon\Carbon::parse($date->dates)->format('F j, Y') }}</th>
+                                                        <th><?php echo e(\Carbon\Carbon::parse($date->dates)->format('F j, Y')); ?></th>
                                                         <td class="list-group">
-                                                            @foreach($date->timeSlots as $slot)
+                                                            <?php $__currentLoopData = $date->timeSlots; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slot): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                 
-                                                                    {{ \Carbon\Carbon::parse($slot->start_time)->format('g:i A') }}
+                                                                    <?php echo e(\Carbon\Carbon::parse($slot->start_time)->format('g:i A')); ?>
+
                                                                     -
-                                                                    {{ \Carbon\Carbon::parse($slot->end_time)->format('g:i A') }}
-                                                            @endforeach
+                                                                    <?php echo e(\Carbon\Carbon::parse($slot->end_time)->format('g:i A')); ?>
+
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </td>
                                                     </tr>
-                                                @empty
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                 <tr>
                                                     <td>No one-time availability.</td>
                                                 </tr>
-                                                @endforelse
+                                                <?php endif; ?>
                                             </table>
                                         </div>
                                     </div>
@@ -218,27 +218,29 @@ class="btn btn-primary">Update Profile</button>
                                         <div class="card-body">
                                             <table class='table w-100'>
 
-                                            @forelse($cleaner->recurringAvailabilities as $recurring)
+                                            <?php $__empty_1 = true; $__currentLoopData = $cleaner->recurringAvailabilities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recurring): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
 
                                             <tr>
-                                                <th>{{ ucfirst($recurring->day_of_week) }}</th>
-                                                <td>  {{ \Carbon\Carbon::parse($recurring->start_time)->format('g:i A') }}
+                                                <th><?php echo e(ucfirst($recurring->day_of_week)); ?></th>
+                                                <td>  <?php echo e(\Carbon\Carbon::parse($recurring->start_time)->format('g:i A')); ?>
+
                                                     -
-                                                    {{ \Carbon\Carbon::parse($recurring->end_time)->format('g:i A') }}
+                                                    <?php echo e(\Carbon\Carbon::parse($recurring->end_time)->format('g:i A')); ?>
+
                                                 </td>
-                                                <td>@if($recurring->is_active === 0)
+                                                <td><?php if($recurring->is_active === 0): ?>
                                                     <span class='badge bg-danger'>In-Active</span>
-                                                    @else
+                                                    <?php else: ?>
                                                     <span class='badge bg-success'>Active</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
 
-                                            @empty
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                             <tr>
                                                 <td>No recurring availability.</td>
                                             </tr>
-                                            @endforelse
+                                            <?php endif; ?>
 
                                             </table>
                                         </div>
@@ -259,14 +261,14 @@ class="btn btn-primary">Update Profile</button>
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="dynamicForm" method="POST" action="">
-        @csrf
+        <?php echo csrf_field(); ?>
         <div class="modal-header">
           <h6 class="modal-title" id="optionModalLabel">Add Option</h6>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-          <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+          <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
 
           <!-- Sqft -->
           <div class="mb-3" id="sqftGroup">
@@ -306,8 +308,7 @@ class="btn btn-primary">Update Profile</button>
     </div>
   </div>
 </div>
-{{-- 
-Update User Profile --}}
+
 
 <div class="modal fade" id="cleaneraddModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -321,36 +322,36 @@ Update User Profile --}}
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-      <form action="{{ route('cleaners.update') }}" method='POST' enctype="multipart/form-data">
-            @csrf
+      <form action="<?php echo e(route('cleaners.update')); ?>" method='POST' enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <label class="form-label">Full Name</label>
-                        <input type="text" name="name" class="form-control" id="firstname" value='{{ $cleaner->name }}'>
-                        <input type="hidden" name="cleaner_id" class="form-control" id="cleaner_id" value='{{ $cleaner->id }}'>
+                        <input type="text" name="name" class="form-control" id="firstname" value='<?php echo e($cleaner->name); ?>'>
+                        <input type="hidden" name="cleaner_id" class="form-control" id="cleaner_id" value='<?php echo e($cleaner->id); ?>'>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" value='{{$cleaner->email}}'>
+                        <input type="email" name="email" class="form-control" value='<?php echo e($cleaner->email); ?>'>
                     </div>
                 </div>
                 <div class='row gy-3'>
                     <div class="col-12">
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" class="form-control" id="cleaner_phone" value='{{$cleaner->phone}}'>
+                        <input type="text" name="phone" class="form-control" id="cleaner_phone" value='<?php echo e($cleaner->phone); ?>'>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Bio</label>
-                        <textarea name="bio" class="form-control" rows="4" cols="50" id="cleaner_bio">{{$cleaner->bio}}</textarea>
+                        <textarea name="bio" class="form-control" rows="4" cols="50" id="cleaner_bio"><?php echo e($cleaner->bio); ?></textarea>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Price</label>
-                        <input type="text" name="price" class="form-control" value='{{$cleaner->price}}'>
+                        <input type="text" name="price" class="form-control" value='<?php echo e($cleaner->price); ?>'>
                     </div>
                     <div class="col-12">
                         <label for="profile_picture">Profile Picture</label>
                         <input type="file" name='profile_picture' id='profile_picture' class='form-control'>
-                        <img style='width:130px;' src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="">
+                        <img style='width:130px;' src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="">
                     </div>
                     <div class="col-12">
                         <label class="form-label">Password</label>
@@ -371,13 +372,13 @@ Update User Profile --}}
 <script>
 const forms = {
   bedroom: {
-    action: '{{ route("insert.bed.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bed.areasqft.options")); ?>'
   },
   bathroom: {
-    action: '{{ route("insert.bath.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bath.areasqft.options")); ?>'
   },
   service: {
-    action: '{{ route("insert.service") }}'
+    action: '<?php echo e(route("insert.service")); ?>'
   }
 };
 
@@ -427,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('input[name="price"]').value = price;
 
             // Optional: set form action to update instead of insert
-            document.querySelector('#cleaneraddModal form').setAttribute('action', '{{ route("cleaners.update", ["id" => $cleaner->id]) }}');
+            document.querySelector('#cleaneraddModal form').setAttribute('action', '<?php echo e(route("cleaners.update", ["id" => $cleaner->id])); ?>');
         });
     });
 });
@@ -436,4 +437,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/2025 Projects/updatedecopros/resources/views/admin/cleaners/single_cleaner/profile.blade.php ENDPATH**/ ?>

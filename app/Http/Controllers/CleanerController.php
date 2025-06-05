@@ -157,7 +157,7 @@ class CleanerController extends Controller
 
     public function cleanerProfile($id)
     {
-        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service'])->findOrFail($id);
+        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service','availableDates.timeSlots','recurringAvailabilities'])->findOrFail($id);
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 
@@ -180,13 +180,14 @@ class CleanerController extends Controller
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 
-    public function update_cleaner(Request $request, $id)
+    public function update_cleaner(Request $request)
     {
-        $cleaner = Cleaner::findOrFail($id);
+        
+        $cleaner = Cleaner::findOrFail($request->cleaner_id);
         
         $validator = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $cleaner->user_id,
+            'email' => 'required|email|unique:users,email,' . $request->cleaner_id,
             'phone' => 'nullable',
             'bio' => 'nullable',
             'price' => 'required|numeric',

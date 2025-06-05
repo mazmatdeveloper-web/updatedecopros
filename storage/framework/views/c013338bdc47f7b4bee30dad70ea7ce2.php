@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="container">
     <h4 class='my-3 text-center'>Confirm Service</h4>
@@ -10,12 +8,12 @@
                 <div class="col-md-7">
                     <div class="cleaner-profile-selected">
                         <div class="profile-picturebox">
-                                @if ($cleaner->profile_picture)
-                                    <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" width="150">
-                                @endif
+                                <?php if($cleaner->profile_picture): ?>
+                                    <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" width="150">
+                                <?php endif; ?>
                         </div>
                         <div class="cleaner-name-box">
-                            <h4>{{$cleaner->name}}</h4>
+                            <h4><?php echo e($cleaner->name); ?></h4>
                             <p>House Cleaning</p>
                         </div>
                     </div>
@@ -24,42 +22,43 @@
                         <table class='selected-items-table w-100'>
                             <tr>
                                 <th>Dimensions</th>
-                                <td class='text-end'><span class='selected-beds'>{{ $beds }}</span> BD / <span class='selected-baths'>{{$baths}}</span> BA / <span class='selected-area'>{{$area_sqft}}</span> sqft</td>
+                                <td class='text-end'><span class='selected-beds'><?php echo e($beds); ?></span> BD / <span class='selected-baths'><?php echo e($baths); ?></span> BA / <span class='selected-area'><?php echo e($area_sqft); ?></span> sqft</td>
                             </tr>
                             <tr>
                                 <th>Start Time</th>
-                                @php
+                                <?php
                                     use Carbon\Carbon;
                                     $formattedDate = Carbon::parse($selectedDate)->format('D, M d');
-                                @endphp
+                                ?>
 
                                 <td class='text-end'>
-                                    {{ $formattedDate }} at {{ $slot }}
+                                    <?php echo e($formattedDate); ?> at <?php echo e($slot); ?>
+
                                 </td>
                             </tr>
                             <tr>
                                 <th>Frequency</th>
-                                @if($frequency === 'one_time')
+                                <?php if($frequency === 'one_time'): ?>
                                 <td class='text-end'>One Time</td>
-                                @elseif($frequency === 'weekly')
+                                <?php elseif($frequency === 'weekly'): ?>
                                 <td class='text-end'>Every Week</td>
-                                @elseif($frequency === 'biweekly')
+                                <?php elseif($frequency === 'biweekly'): ?>
                                 <td class='text-end'>Biweekly</td>
-                                @elseif($frequency === 'monthly')
+                                <?php elseif($frequency === 'monthly'): ?>
                                 <td class='text-end'>Every Month</td>
-                                @endif
+                                <?php endif; ?>
                             </tr>
                             <tr>
-                                @if($selectedAddons->isNotEmpty())
+                                <?php if($selectedAddons->isNotEmpty()): ?>
                                 <th class='d-flex'>Additional Services</th>
                                 <td class='text-end'> 
                                     
                                         <ul class='addon-list' style='list-style:none;'>
-                                            @foreach($selectedAddons as $addon)
-                                                <li>{{ $addon->addon_name }}</li>
-                                            @endforeach
+                                            <?php $__currentLoopData = $selectedAddons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <li><?php echo e($addon->addon_name); ?></li>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ul>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         </table>
@@ -69,25 +68,25 @@
                         <table class='selected-items-table w-100'>
                             <tr>
                                 <th>One-time Price</th>
-                                <td class='text-end'>${{number_format($oneTimePrice, 2)}}</td>
+                                <td class='text-end'>$<?php echo e(number_format($oneTimePrice, 2)); ?></td>
                             </tr>
-                            @if(isset($discountAmounts[$frequency]))
+                            <?php if(isset($discountAmounts[$frequency])): ?>
                             <tr>     
-                                    @if($frequency === 'weekly')
+                                    <?php if($frequency === 'weekly'): ?>
                                         <th>Weekly Discount (20% off)</th>
-                                        <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    @elseif($frequency === 'biweekly')
+                                        <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
+                                    <?php elseif($frequency === 'biweekly'): ?>
                                         <th>Biweekly Discount (10% off)</th>
-                                        <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    @elseif($frequency === 'one_time')
+                                        <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
+                                    <?php elseif($frequency === 'one_time'): ?>
                                         <th></th>
                                         <td class="text-end text-success"></td>
-                                    @elseif($frequency === 'monthly')
+                                    <?php elseif($frequency === 'monthly'): ?>
                                     <th>Monthly Discount (10% off)</th>
-                                    <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    @endif
+                                    <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
+                                    <?php endif; ?>
                             </tr>
-                            @endif
+                            <?php endif; ?>
                         </table>
                     </div>
 
@@ -95,21 +94,21 @@
                         <table class='selected-items-table w-100'>
                             <tr>
                                 <th>Total</th>
-                                <td class='text-end'>${{number_format($discountedPrices[$frequency], 2)}}</td>
+                                <td class='text-end'>$<?php echo e(number_format($discountedPrices[$frequency], 2)); ?></td>
                             </tr>
                             
                         </table>
                     </div>
 
-                    @if(!Auth::check())
+                    <?php if(!Auth::check()): ?>
                     <div class="login-btns-div">
                     <button type='button' class='loginbtn' data-bs-toggle="modal" data-bs-target="#pill-modal">
                            Login & Confirm
                         </button>
                     </div>
-                    @else
+                    <?php else: ?>
                     <button class='continuebtn'>Continue</button>
-                    @endif
+                    <?php endif; ?>
                     
                 </div>
            </div>
@@ -126,8 +125,8 @@
                     <h5 class="modal-title" id="pillModalLabel">Log In</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('manual.login') }}" class="login-form" method='POST'>
-                        @csrf
+                    <form action="<?php echo e(route('manual.login')); ?>" class="login-form" method='POST'>
+                        <?php echo csrf_field(); ?>
                        <div class='form-group'>
                             <label for="">Email</label><br>
                             <input type="email" name='email' placeholder='Email Address' class='w-100'>
@@ -142,4 +141,5 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/2025 Projects/updatedecopros/resources/views/frontend/quote-checkout.blade.php ENDPATH**/ ?>
