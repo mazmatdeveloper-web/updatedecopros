@@ -7,17 +7,34 @@
     <?php endif; ?>    
     <h6 class="fw-semibold mb-0"><?php echo e($cleaner->name); ?></h6>
     </div>
+    <?php if($errors->any()): ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Something went wrong...',
+            html: `<?php echo implode('<br>', $errors->all()); ?>`,
+            position: 'top-end',
+            toast: true,
+            timer: 500000,
+            showCloseButton: true,
+            showConfirmButton: false,
+            timerProgressBar: true,
+        });
+    </script>
+    <?php endif; ?>
     <div>
         <button  
-data-bs-toggle="modal" 
-  data-bs-target="#cleaneraddModal"
-  data-id="<?php echo e($cleaner->id); ?>" 
-  data-name="<?php echo e($cleaner->name); ?>" 
-  data-email="<?php echo e($cleaner->email); ?>"
-  data-phone="<?php echo e($cleaner->phone); ?>"
-  data-bio="<?php echo e($cleaner->bio); ?>"
-  data-price="<?php echo e($cleaner->price); ?>"
-class="btn btn-primary">Update Profile</button>
+            data-bs-toggle="modal" 
+            data-bs-target="#cleaneraddModal"
+            data-id="<?php echo e($cleaner->id); ?>" 
+            data-name="<?php echo e($cleaner->name); ?>" 
+            data-email="<?php echo e($cleaner->email); ?>"
+            data-phone="<?php echo e($cleaner->phone); ?>"
+            data-bio="<?php echo e($cleaner->bio); ?>"
+            data-price="<?php echo e($cleaner->price); ?>"
+            class="btn btn-primary">Update Profile
+        </button>
     </div>
     </div>
 
@@ -234,6 +251,22 @@ class="btn btn-primary">Update Profile</button>
                                                     <span class='badge bg-success'>Active</span>
                                                     <?php endif; ?>
                                                 </td>
+                                                <td>
+                                                <a 
+                                                    style="cursor:pointer;" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#timeslotmodal"
+                                                    data-id="<?php echo e($recurring->id); ?>"
+                                                    data-day="<?php echo e($recurring->day_of_week); ?>"
+                                                    data-start="<?php echo e($recurring->start_time); ?>"
+                                                    data-end="<?php echo e($recurring->end_time); ?>"
+                                                    data-interval="<?php echo e($recurring->interval); ?>"
+                                                    data-active="<?php echo e($recurring->is_active); ?>"
+                                                    class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle open-timeslot-modal"
+                                                > 
+                                                    <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                                </a>
+                                                </td>
                                             </tr>
 
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -256,7 +289,7 @@ class="btn btn-primary">Update Profile</button>
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Bed Modal -->
 <div class="modal fade" id="optionModal" tabindex="-1" aria-labelledby="optionModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -272,20 +305,44 @@ class="btn btn-primary">Update Profile</button>
 
           <!-- Sqft -->
           <div class="mb-3" id="sqftGroup">
-            <label>No of Sqft</label>
-            <input type="text" name="no_of_sqft" class="form-control" placeholder="e.g. 1000">
+            <label>From (Sqft)</label>
+            <input type="text" name="from" class="form-control" placeholder="e.g. 1000">
+          </div>
+
+          <div class="mb-3" id="sqftGroup">
+            <label>To (Sqft)</label>
+            <input type="text" name="to" class="form-control" placeholder="e.g. 1000">
           </div>
 
           <!-- Beds -->
           <div class="mb-3" id="bedGroup">
             <label>No of Bedrooms</label>
-            <input type="number" name="beds" class="form-control" placeholder="e.g. 2">
+            <!-- <input type="number" name="beds" class="form-control" placeholder="e.g. 2"> -->
+            <select name="beds" class='form-control'>
+                <option selected>Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
           </div>
 
           <!-- Baths -->
           <div class="mb-3" id="bathGroup">
             <label>No of Bathrooms</label>
-            <input type="number" name="baths" class="form-control" placeholder="e.g. 1">
+            <select name="baths" class='form-control'>
+                <option selected>Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
           </div>
 
           <!-- Service Name -->
@@ -369,6 +426,51 @@ class="btn btn-primary">Update Profile</button>
 </div>
 
 
+<!-- Timeslots Modal -->
+<div class="modal fade" id="timeslotmodal" tabindex="-1" aria-labelledby="timeslotmodalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="<?php echo e(route('recurring-availability.update')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="id" id="modal_id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Availability</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="modal_day" class="form-label">Day of Week</label>
+                        <input type="text" class="form-control" id="modal_day" name="day_of_week" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_start" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="modal_start" name="start_time">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_end" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="modal_end" name="end_time">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_interval" class="form-label">Interval (minutes)</label>
+                        <input type="number" class="form-control" id="modal_interval" name="interval">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_active" class="form-label">Status</label>
+                        <select class="form-select" name="is_active" id="modal_active">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update Availability</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script>
 const forms = {
   bedroom: {
@@ -407,35 +509,20 @@ $(document).on('click', '.open-modal', function () {
 });
 </script>
 
-
-<!-- <script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
-    const updateButtons = document.querySelectorAll('[data-bs-target="#cleaneraddModal"]');
-
-    updateButtons.forEach(button => {
+    document.querySelectorAll('.open-timeslot-modal').forEach(button => {
         button.addEventListener('click', function () {
-            const name = button.getAttribute('data-name');
-            const email = button.getAttribute('data-email');
-            const phone = button.getAttribute('data-phone');
-            const bio = button.getAttribute('data-bio');
-            const price = button.getAttribute('data-price');
-
-            // Fill form fields
-            document.getElementById('firstname').value = name;
-            document.querySelector('input[name="email"]').value = email;
-            document.getElementById('cleaner_phone').value = phone;
-            document.getElementById('cleaner_bio').value = bio;
-            document.querySelector('input[name="price"]').value = price;
-
-            // Optional: set form action to update instead of insert
-            document.querySelector('#cleaneraddModal form').setAttribute('action', '<?php echo e(route("cleaners.update", ["id" => $cleaner->id])); ?>');
+            document.getElementById('modal_id').value = this.dataset.id;
+            document.getElementById('modal_day').value = this.dataset.day;
+            document.getElementById('modal_start').value = this.dataset.start;
+            document.getElementById('modal_end').value = this.dataset.end;
+            document.getElementById('modal_interval').value = this.dataset.interval;
+            document.getElementById('modal_active').value = this.dataset.active;
         });
     });
 });
-</script> -->
-
-
-
+</script>
 
 <?php $__env->stopSection(); ?>
 

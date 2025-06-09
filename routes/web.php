@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\AppointmentController;
 
 Route::get('/', function () {
     return view('home');
@@ -68,5 +69,18 @@ Route::get('delete-addon/{id}',[AdminController::class,'delete_addon'])->name('d
 Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.addon');
 Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');
 
-Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
+Route::get('appointments',[AdminController::class,'all_appointments'])->name('appointments');
 
+
+Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
+Route::post('/manual-register', [CustomerController::class, 'manual_register'])->name('manual.register');
+Route::post('book-appointment',[AppointmentController::class, 'book_appointment'])->name('book.appointment');
+
+// Timeslots Routes
+
+Route::post('/recurring-availability/update', [AvailabilityController::class, 'recurring_availability_update'])->name('recurring-availability.update');
+
+Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
+    Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+    Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');
+});
