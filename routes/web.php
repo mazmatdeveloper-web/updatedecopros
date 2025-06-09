@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\AppointmentController;
 
 Route::get('/', function () {
     return view('home');
@@ -42,7 +44,7 @@ Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zip
 Route::get('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
 Route::post('calculate-prices', [QuoteController::class, 'calculatePrices'])->name('calculate.prices');
 Route::get('checkout', [QuoteController::class, 'quote_checkout'])->name('quote.checkout');
-
+Route::get('thank-you',[AppointmentController::class,'thank_you'])->name('quote.thankyou');
 
 
 // Bed Routes
@@ -57,7 +59,7 @@ Route::post('insert-service',[FiltersController::class,'insert_service'])->name(
 Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
 Route::get('cleaners/delete/{id}', [CleanerController::class, 'delete_cleaner'])->name('cleaners.delete');
 Route::get('cleaners/edit/{id}', [CleanerController::class, 'edit_cleaner'])->name('cleaners.edit');
-Route::post('cleaners/update/{id}', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
+Route::post('cleaners/update', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
 
 // addons
 
@@ -66,3 +68,19 @@ Route::post('insert-addon',[AdminController::class,'insert_addon'])->name('inser
 Route::get('delete-addon/{id}',[AdminController::class,'delete_addon'])->name('delete.addon');
 Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.addon');
 Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');
+
+Route::get('appointments',[AdminController::class,'all_appointments'])->name('appointments');
+
+
+Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
+Route::post('/manual-register', [CustomerController::class, 'manual_register'])->name('manual.register');
+Route::post('book-appointment',[AppointmentController::class, 'book_appointment'])->name('book.appointment');
+
+// Timeslots Routes
+
+Route::post('/recurring-availability/update', [AvailabilityController::class, 'recurring_availability_update'])->name('recurring-availability.update');
+
+Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
+    Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+    Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');
+});

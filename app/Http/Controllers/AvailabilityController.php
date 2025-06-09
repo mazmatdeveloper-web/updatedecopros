@@ -80,4 +80,24 @@ class AvailabilityController extends Controller
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
+
+    public function recurring_availability_update(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:recurring_availabilities,id',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'interval' => 'required|integer',
+            'is_active' => 'required|boolean',
+        ]);
+
+        RecurringAvailability::where('id', $request->id)->update([
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'interval' => $request->interval,
+            'is_active' => $request->is_active,
+        ]);
+
+        return back()->with('success', 'Availability updated successfully.');
+    }
 }

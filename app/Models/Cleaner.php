@@ -34,6 +34,10 @@ class Cleaner extends Model
     {
         return $this->hasMany(RecurringAvailability::class);
     }
+    public function timeSlots()
+    {
+        return $this->hasMany(AvailableTimeSlot::class);
+    }
 
     //filters relations   
     

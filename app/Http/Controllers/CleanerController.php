@@ -14,27 +14,23 @@ class CleanerController extends Controller
 {
     public function show(Cleaner $cleaner)
     {
-        // Load both specific date availability and recurring availability
         $cleaner->load([
             'availableDates.timeSlots',
             'recurringAvailabilities'
         ]);
     
-        // Step 1: Build a map of specific date slots and intervals
         $availableSlotData = [];
         foreach ($cleaner->availableDates as $date) {
             foreach ($date->timeSlots as $slot) {
-                // For each time slot, append the interval if available
                 $slot->hourly_segments = $this->generateHourlySlots($slot->start_time, $slot->end_time, $slot->interval);
             }
-            // Store the interval as well for each date
+           
             $availableSlotData[$date->dates] = [
                 'time_slots' => $date->timeSlots,
-                'interval' => $date->interval ?? 60, // Default to 60 minutes if interval is not set
+                'interval' => $date->interval ?? 60, 
             ];
         }
     
-        // Step 2: Appointments for this cleaner
         $appointments = Appointment::where('cleaner_id', $cleaner->id)
             ->get()
             ->map(function ($appointment) {
@@ -45,7 +41,7 @@ class CleanerController extends Controller
                 ];
             });
     
-        // Step 3: Prepare recurring availability grouped by weekday
+
         $recurringByDay = $cleaner->recurringAvailabilities->groupBy('day_of_week');
     
         return view('cleaners.show', compact('cleaner', 'appointments', 'recurringByDay', 'availableSlotData'));
@@ -55,7 +51,7 @@ class CleanerController extends Controller
     {
         $start = Carbon::parse($startTime);
         $end = Carbon::parse($endTime);
-        $interval = $intervalMinutes ?: 60; // Default to 60 minutes if no interval is provided
+        $interval = $intervalMinutes ?: 60;
         $slots = [];
 
         while ($start->copy()->addMinutes($interval) <= $end) {
@@ -157,7 +153,7 @@ class CleanerController extends Controller
 
     public function cleanerProfile($id)
     {
-        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service'])->findOrFail($id);
+        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service','availableDates.timeSlots','recurringAvailabilities'])->findOrFail($id);
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 
@@ -180,39 +176,48 @@ class CleanerController extends Controller
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 
-    public function update_cleaner(Request $request, $id)
+    public function update_cleaner(Request $request)
     {
-        $cleaner = Cleaner::findOrFail($id);
         
-        $validator = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $cleaner->user_id,
-            'phone' => 'nullable',
-            'bio' => 'nullable',
-            'price' => 'required|numeric',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $request->validate([
+            'cleaner_id' => 'required|exists:cleaners,id',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:cleaners,email,' . $request->cleaner_id,
+            'phone'      => 'nullable|string',
+            'bio'        => 'nullable|string',
+            'price'      => 'nullable|numeric',
+            'password'   => 'nullable|string|min:6',
+            'profile_picture' => 'nullable|image|max:2048', // 2MB max
         ]);
-
-        $cleaner->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'bio' => $request->bio,
-            'price' => $request->price,
-        ]);
-
-        if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('cleaners', 'public');
-            $cleaner->profile_picture = $profilePicturePath;
+    
+        $cleaner = Cleaner::findOrFail($request->cleaner_id);
+        $cleaner->name  = $request->name;
+        $cleaner->email = $request->email;
+        $cleaner->phone = $request->phone;
+        $cleaner->bio   = $request->bio;
+        $cleaner->price = $request->price;
+    
+        if ($request->filled('password')) {
+            $cleaner->password = Hash::make($request->password);
         }
-
+    
+        if ($request->hasFile('profile_picture')) {
+            // Delete old image if exists
+            if ($cleaner->profile_picture && Storage::exists('public/' . $cleaner->profile_picture)) {
+                Storage::delete('public/' . $cleaner->profile_picture);
+            }
+    
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $cleaner->profile_picture = $path;
+        }
+    
         $cleaner->save();
-
-        Alert::toast('Cleaner Updated Successfully!', 'success')
-            ->position('top-end')
-            ->timerProgressBar()
-            ->autoClose(5000);
         
-        return redirect()->route('all.cleaners');
+        Alert::toast('Profile Updated Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(5000);
+
+        return back();
     }
 }

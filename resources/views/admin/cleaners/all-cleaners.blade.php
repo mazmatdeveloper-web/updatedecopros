@@ -64,20 +64,22 @@
                                         @endif
                                     </td>
                                     <td>${{ $cleaner->price }}</td>
-                                    <td style="display:flex;gap:10px;" >
-                                        <form>  
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $cleaner->id }}">
+                                    <td>
+                                        <div class='d-flex align-items-center gap-1'>
+                                            <a href="{{ route('cleaners.profile',$cleaner->id) }}">
+                                            <button type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
+                                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                            </button>
+                                            </a>
+                                            <form>  
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $cleaner->id }}">
                                             <button type="submit" formaction="{{ route('cleaners.delete', ['id' => $cleaner ->id]) }}" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
-                                            <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
-                                        </button>
-                                        </form>
-                                    <a href="{{ route('cleaners.profile',$cleaner->id) }}">
-                                    <button type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
-                                    <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                </button>
-                            </a>
-                            </td>
+                                                <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                            </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
