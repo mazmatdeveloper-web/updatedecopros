@@ -23,7 +23,8 @@ class FiltersController extends Controller
     {
         $request->validate([
             'cleaner_id' => 'required|exists:cleaners,id',
-            'no_of_sqft' => 'required|string|max:255',
+            'from' => 'required|string|max:255',
+            'to' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'beds' => 'required|numeric|min:1',
             
@@ -31,7 +32,7 @@ class FiltersController extends Controller
     
         BedAreaSqft::create([
             'cleaner_id' => $request->cleaner_id,
-            'no_of_sqft' => $request->no_of_sqft,
+            'no_of_sqft' => $request->from." - ".$request->to,
             'price' => $request->price,
             'beds' => $request->beds,
         ]);
@@ -47,7 +48,8 @@ class FiltersController extends Controller
     {
         $request->validate([
             'cleaner_id' => 'required|exists:cleaners,id',
-            'no_of_sqft' => 'required|string|max:255',
+            'from' => 'required|string|max:255',
+            'to' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'baths' => 'required|numeric|min:1',
             
@@ -55,7 +57,7 @@ class FiltersController extends Controller
     
         BathAreaSqft::create([
             'cleaner_id' => $request->cleaner_id,
-            'no_of_sqft' => $request->no_of_sqft,
+            'no_of_sqft' => $request->from." - ".$request->to,
             'price' => $request->price,
             'baths' => $request->baths,
         ]);

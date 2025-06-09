@@ -42,6 +42,12 @@
           <span>Addons</span>
         </a>
       </li>
+      <li>
+        <a href="{{ route('appointments') }}">
+        <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
+          <span>Appointments</span>
+        </a>
+      </li>
     </ul>
   </div>
 

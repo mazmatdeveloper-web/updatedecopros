@@ -6,6 +6,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\Zipcode;
 use App\Models\Addon;
+use App\Models\Appointment;
 use App\Models\Service;
 
 class AdminController extends Controller
@@ -135,7 +136,7 @@ class AdminController extends Controller
     public function update_addon(Request $request, $id)
     {
         $request->validate([
-            'addon_name' => 'required|unique:addons|string|max:255',
+            'addon_name' => 'required|string|max:255',
             'price' => 'required|numeric',
         ]);
 
@@ -162,6 +163,26 @@ class AdminController extends Controller
         ->timerProgressBar()
         ->autoClose(3000);
         return redirect()->back();
+    }
+
+    public function all_appointments(Request $request)
+    {
+        $query = Appointment::with(['service', 'cleaner']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+    
+            $query->whereHas('service', function($q) use ($search) {
+                $q->where('service_name', 'like', "%$search%");
+            })->orWhereHas('cleaner', function($q) use ($search) {
+                $q->where('name', 'like', "%$search%");
+            })->orWhere('status', 'like', "%$search%")
+              ->orWhereDate('appointment_date', $search);
+        }
+    
+        $appointments = $query->orderBy('appointment_date', 'desc')->paginate(2);
+    
+        return view('admin.appointments.index', compact('appointments'));
     }
     
 }
