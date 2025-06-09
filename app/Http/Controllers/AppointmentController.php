@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\AppointmentSnapshot;
 use App\Models\Appointment;
 use App\Models\Addon;
+use App\Mail\AppointmentBookedMail;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+
+   
+
     public function book_appointment(Request $request)
     {
         $data = $request->validate([
@@ -49,7 +54,15 @@ class AppointmentController extends Controller
             'address' => $data['address'],
             'additional_notes' => $data['additional_notes']
         ]);
-    
+
+        $appointment->load(['cleaner', 'customer', 'service']);
+                
+        Mail::to($appointment->customer->email)->send(new AppointmentBookedMail($appointment));
+
+        Mail::to($appointment->cleaner->email)->send(new AppointmentBookedMail($appointment));
+
+        Mail::to('admin@example.com')->send(new AppointmentBookedMail($appointment));
+            
         return view('frontend.thankyou', compact('appointment'));
     }
 }
