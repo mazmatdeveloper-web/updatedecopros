@@ -26,6 +26,8 @@ class AppointmentController extends Controller
             'discount_price' => 'nullable|numeric',
             'total_price' => 'required|numeric',
             'addon_ids' => 'nullable|string',
+            'address' => 'nullable|string',
+            'additional_notes' => 'nullable|string'
         ]);
 
         $currentDate = Carbon::now()->format('Y-m-d');
@@ -43,9 +45,11 @@ class AppointmentController extends Controller
             'discount_price' => $data['discount_price'] ?? 0,
             'total_price' => $data['total_price'],
             'addon_ids' => $data['addon_ids'],
-            'status' => 'pending'
+            'status' => 'pending',
+            'address' => $data['address'],
+            'additional_notes' => $data['additional_notes']
         ]);
     
-        return redirect()->back()->with('success', 'Appointment created successfully!');
+        return view('frontend.thankyou', compact('appointment'));
     }
 }

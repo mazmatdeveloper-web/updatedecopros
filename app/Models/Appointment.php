@@ -20,7 +20,8 @@ class Appointment extends Model
         'discount_price',
         'total_price',
         'status',
-        'address'
+        'address',
+        'additional_notes'
         ];
     public function cleaner()
     {
@@ -29,5 +30,9 @@ class Appointment extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+    public function customer()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -137,8 +137,10 @@
 
                             <input type="hidden" name="addon_ids" value='{{ $addonIds }}'>
                             <label class='mt-3' for="address">Address</label>
-                            <textarea name="address" class='form-control bg-white text-dark' placeholder='Enter Your Address' id="address" cols="30" rows="5">
-                            </textarea>
+                            <input name="address" class='form-control bg-white text-dark' placeholder='Enter Your Address' id="address">
+                            <label class='mt-2' for="additional_notes">Additional Notes</label>
+                            <textarea name="additional_notes" class='form-control bg-white text-dark' placeholder='Enter Notes for cleaner' id="additional_notes" cols="30" rows="5"></textarea>
+                           
                             <button class='continuebtn' type='submit'>Continue</button>
                         </form>
                             

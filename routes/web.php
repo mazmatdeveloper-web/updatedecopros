@@ -44,7 +44,7 @@ Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zip
 Route::get('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
 Route::post('calculate-prices', [QuoteController::class, 'calculatePrices'])->name('calculate.prices');
 Route::get('checkout', [QuoteController::class, 'quote_checkout'])->name('quote.checkout');
-
+Route::get('thank-you',[AppointmentController::class,'thank_you'])->name('quote.thankyou');
 
 
 // Bed Routes
