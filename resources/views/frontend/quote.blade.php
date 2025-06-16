@@ -15,22 +15,28 @@
         });
     </script>
 
-    <div class="modal fade" id="zipcodeModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true"
+<div class="modal modal-md fade" id="zipcodeModal" tabindex="-1" aria-labelledby="zipcodeModalLabel" aria-hidden="true"
         data-bs-backdrop="static" data-bs-keyboard="true">
         <div class="modal-dialog modal-dialog-centered zipcodemodal">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="zipcodeModalLabel">Enter Address</h5>
-                </div>
-                <div class="modal-body">
+                <div class="modal-body">             
+                            <h3 class='modal-heading'>Where Will The Service Be Taking Place?</h3>
+                            <p class='modal-para'>To get started, please enter your ZIP code below. This helps us check service availability in your area and provide the best options for your location. Once verified, you’ll be able to continue with the rest of the booking process.</p>                          
                     <form id="zipcode-form">
                         <div class="mb-3">
-                            <label for="autocomplete" class="form-label">Full Address</label>
-                            <input type="text" id="autocomplete" class="zipcode form-control"
-                                placeholder="e.g. Haun Road, Menifee, CA">
+                            <label for="autocomplete" class="form-label modal-label">We just need your <strong>ADDRESS</strong> to start.</label>
+                            <div class="row">
+                                <div class="col-md-8" style='padding-right:0;'>
+                                    <input type="text" id="autocomplete" class="zipcode-field form-control"
+                                    placeholder="e.g. Haun Road, Menifee, CA">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="w-100 zipcode-submit">Submit</button>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <button type="submit" class="btn w-100">Submit</button>
-                        <div id="successmessage" style="color: green; text-align:center; margin-top:10px; display:none;"></div>
+                        <!-- <div id="successmessage" style="font-siz:14px; color: green; text-align:center; margin-top:10px; display:none;"></div> -->
                         <p id="error" class='mb-0 mt-1' style="color:red; display:none;">Zip code not found in system.</p>
                     </form>
                 </div>
@@ -100,9 +106,9 @@
                         <p>Rate Increase Protection</p>
                     </div>
                     
-                    <div class="price-estimate-row">
+                    <!-- <div class="price-estimate-row">
                         <p class='text-end my-2'><strong id='price-calculate-estimate'>$208+</strong> Total Price</p>
-                    </div>
+                    </div> -->
                     <button type='submit' class='continue-btn w-100'>Continue</button>
                 </form>
             </div>
@@ -121,7 +127,7 @@
                    <div class="popup-field-group">
                         <select name="no_of_beds" id="no_of_beds_select">
                             <option value="0">0 BD</option>
-                            <option value="1" selected>1 BD</option>
+                            <option value="1">1 BD</option>
                             <option value="2">2 BD</option>
                             <option value="3">3 BD</option>
                             <option value="4">4 BD</option>
@@ -129,7 +135,7 @@
                             <option value="6">6 BD</option>
                         </select>
                         <select name="no_of_baths" id="no_of_baths_select">
-                            <option value="1" selected>1 BR</option>
+                            <option value="1">1 BR</option>
                             <option value="1.5">1.5 BR</option>
                             <option value="2">2 BR</option>
                             <option value="2.5">2.5 BR</option>
@@ -140,7 +146,7 @@
                             <option value="5">5 BR</option>
                         </select>
                         <select name="no_of_sqft" id="no_of_sqft_select">
-                            <option value="0 - 1000" selected>0 -1000 sqft</option>
+                            <option value="0 - 1000">0 -1000 sqft</option>
                             <option value="1000 - 1500">1000 - 1500 sqft</option>
                             <option value="1500 - 2000">1500 - 2000 sqft</option>
                             <option value="2000 - 2500">2000 - 2500 sqft</option>
@@ -162,31 +168,32 @@
 
 
 <script>
+    $(document).ready(function() {
+    $('#address_field').on('focus click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#zipcodeModal').modal('show');
+        $(this).blur(); // remove focus to prevent cursor appearing
+    });
+});
+</script>
+<script>
     $(document).ready(function () {
 
-        const beds = $('#no_of_beds_select').val();
-        const baths = $('#no_of_baths_select').val();
-        const sqft = $('#no_of_sqft_select').val();
-
-        $('.pill-btn .no_of_beds').text(beds + ' BD');
-        $('.pill-btn .no_of_bathrooms').text(baths + ' BR');
-        $('.pill-btn .sq_ft').text(sqft + ' sqft');
-        $('input.no_of_beds').val(beds);
-        $('input.no_of_baths').val(baths);
-        $('input.sq_ft').val(sqft);
-
         $('.popup-form-btn').on('click', function () {
-            
+            const beds = $('#no_of_beds_select').val();
+            const baths = $('#no_of_baths_select').val();
+            const sqft = $('#no_of_sqft_select').val();
+
             $('.pill-btn .no_of_beds').text(beds + ' BD');
             $('.pill-btn .no_of_bathrooms').text(baths + ' BR');
             $('.pill-btn .sq_ft').text(sqft + ' sqft');
-            
             $('input.no_of_beds').val(beds);
             $('input.no_of_baths').val(baths);
             $('input.sq_ft').val(sqft);
-
             $('#pill-modal').modal('hide');
         });
+
     });
 
     jQuery(document).ready(function ($) {
