@@ -84,3 +84,7 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
     Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');
 });
+
+Route::get('updated',function(){
+    return view('frontend.updated');
+});

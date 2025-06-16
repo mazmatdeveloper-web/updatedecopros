@@ -4,8 +4,8 @@
     <h4 class='my-3 text-center'>Confirm Service</h4>
     <div class="row d-flex align-items-center justify-content-center">
         <div class="col-md-7">
-           <div class="row py-5">
-                <div class="col-md-7">
+           <div class="row py-5 d-flex justify-content-center">
+                <div class="col-md-10 checkout-box">
                 <?php if($errors->any()): ?>
                     <div class="alert alert-danger">
                         <ul>
@@ -80,21 +80,24 @@
                                 <td class='text-end'>$<?php echo e(number_format($oneTimePrice, 2)); ?></td>
                             </tr>
                             <?php if(isset($discountAmounts[$frequency])): ?>
-                            <tr>     
+                              
                                     <?php if($frequency === 'weekly'): ?>
+                                         <tr>  
                                         <th>Weekly Discount (20% off)</th>
                                         <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
-                                    <?php elseif($frequency === 'biweekly'): ?>
+                                        </tr>
+                                        <?php elseif($frequency === 'biweekly'): ?>
+                                        <tr>
                                         <th>Biweekly Discount (10% off)</th>
                                         <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
-                                    <?php elseif($frequency === 'one_time'): ?>
-                                        <th></th>
-                                        <td class="text-end text-success"></td>
-                                    <?php elseif($frequency === 'monthly'): ?>
-                                    <th>Monthly Discount (10% off)</th>
+                                        </tr>
+                                        <?php elseif($frequency === 'monthly'): ?>
+                                        <tr>
+                                        <th>Monthly Discount (10% off)</th>
                                     <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
+                                    </tr>
                                     <?php endif; ?>
-                            </tr>
+                            
                             <?php endif; ?>
                         </table>
                     </div>
@@ -115,7 +118,7 @@
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name='cleaner_id' value='<?php echo e($cleaner->id); ?>'>
                             <input type="hidden" name='customer_id' value='<?php echo e(Auth::user()->id); ?>'>
-                            <input type="hidden" name='beds_area_sqft_id' value='<?php echo e($bedPriceModel->id); ?>'>
+                            <input type="hidden" name='beds_area_sqft_id' value='<?php echo e($bedPriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='baths_area_sqft_id' value='<?php echo e($bathPriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='service_id' value='<?php echo e($servicePriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='discount_label' value='<?php echo e($frequency); ?>'>

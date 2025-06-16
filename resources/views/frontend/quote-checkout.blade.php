@@ -6,8 +6,8 @@
     <h4 class='my-3 text-center'>Confirm Service</h4>
     <div class="row d-flex align-items-center justify-content-center">
         <div class="col-md-7">
-           <div class="row py-5">
-                <div class="col-md-7">
+           <div class="row py-5 d-flex justify-content-center">
+                <div class="col-md-10 checkout-box">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -81,21 +81,24 @@
                                 <td class='text-end'>${{number_format($oneTimePrice, 2)}}</td>
                             </tr>
                             @if(isset($discountAmounts[$frequency]))
-                            <tr>     
+                              
                                     @if($frequency === 'weekly')
+                                         <tr>  
                                         <th>Weekly Discount (20% off)</th>
                                         <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    @elseif($frequency === 'biweekly')
+                                        </tr>
+                                        @elseif($frequency === 'biweekly')
+                                        <tr>
                                         <th>Biweekly Discount (10% off)</th>
                                         <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    @elseif($frequency === 'one_time')
-                                        <th></th>
-                                        <td class="text-end text-success"></td>
-                                    @elseif($frequency === 'monthly')
-                                    <th>Monthly Discount (10% off)</th>
+                                        </tr>
+                                        @elseif($frequency === 'monthly')
+                                        <tr>
+                                        <th>Monthly Discount (10% off)</th>
                                     <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
+                                    </tr>
                                     @endif
-                            </tr>
+                            
                             @endif
                         </table>
                     </div>
@@ -116,7 +119,7 @@
                             @csrf
                             <input type="hidden" name='cleaner_id' value='{{ $cleaner->id }}'>
                             <input type="hidden" name='customer_id' value='{{ Auth::user()->id }}'>
-                            <input type="hidden" name='beds_area_sqft_id' value='{{ $bedPriceModel->id }}'>
+                            <input type="hidden" name='beds_area_sqft_id' value='{{ $bedPriceModel->id ?? "" }}'>
                             <input type="hidden" name='baths_area_sqft_id' value='{{ $bathPriceModel->id ?? "" }}'>
                             <input type="hidden" name='service_id' value='{{ $servicePriceModel->id ?? "" }}'>
                             <input type="hidden" name='discount_label' value='{{ $frequency }}'>
