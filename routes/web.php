@@ -38,6 +38,28 @@ Route::get('services',[AdminController::class,'show_service'])->name('all.servic
 
 Route::get('cleaners',[CleanerController::class,'show_cleaners'])->name('all.cleaners');
 
+// Beds Sqft
+
+Route::get('edit-beds/{id}',[CleanerController::class,'edit_beds'])->name('edit.beds');
+Route::post('/update-beds/{id}', [CleanerController::class, 'updateBeds'])->name('update.beds');
+Route::delete('/delete_beds/{id}',[CleanerController::class,'delete_beds'])->name('delete.beds');
+
+
+// Bathroom Sqft
+
+Route::get('edit-bathroom/{id}',[CleanerController::class,'edit_bathroom'])->name('edit.bathroom');
+Route::post('/update-baths/{id}', [CleanerController::class, 'updatebaths'])->name('update.bathroom');
+Route::delete('delete_baths/{id}',[CleanerController::class,'delete_baths'])->name('delete.baths');
+
+// Services
+Route::get('edit-service/{id}',[CleanerController::class,'edit_service'])->name('edit.service');
+Route::post('/update-services/{id}', [CleanerController::class, 'update_service'])->name('update.services');
+Route::delete('delete-services/{id}',[CleanerController::class,'delete_service'])->name('delete.service');
+
+// Cleaner Availible Dates
+Route::get('edit-availible-date/{id}',[CleanerController::class,'edit_cleaner_availible_dates'])->name('edit.availible.dates');
+Route::post('/update-availible/date/{id}', [CleanerController::class, 'updateAvailability'])->name('update.availinle.date');
+
 Route::get('quote', [QuoteController::class, 'quote_page'])->name('quote');
 Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zipcode');
 

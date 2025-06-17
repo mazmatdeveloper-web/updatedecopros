@@ -12,7 +12,7 @@
    
     <div class="row d-flex justify-content-center">
         
-            <div class="col-md-9 pt-4">
+            <div class="col-md-9 pt-4 pb-5">
 
             <h6>7 House Cleaners<br>Serving <?php echo e($quoteData['address']); ?></h6>
 
@@ -134,7 +134,8 @@
         </div>
 
         <div class="form-group-field">
-            <button type="button" id="toggleAddons">Available Services</button>
+            <label class='field_group_label'>Select Additional Services</label><br>
+            <button type="button" id="toggleAddons" class='w-100'>Available Services</button>
             <div class="addons-div" id="addonsDiv">
                 <?php $__currentLoopData = $addons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="more-options">
@@ -157,7 +158,8 @@
 
 
                         
-                <form class="mb-4">
+               <div class="date-div">
+               <form class="mb-4">
                     <?php
                         use Carbon\Carbon;
                         $today = Carbon::today()->toDateString();
@@ -165,6 +167,7 @@
                     <input type="date" name="date" value="<?php echo e($selectedDate); ?>" class="form-control w-25 d-inline-block" id='dateInput' min="<?php echo e($today); ?>">
                 </form>
                 <h3 class="mb-3"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('F j')); ?></h3>
+               </div>
     
                 <div id="cleanersContainer" class='row'>
                <div class="row d-flex justify-content-center">
@@ -173,7 +176,7 @@
                 
                 <div class="col-md-5">
                 <div class="card mb-2 border-0" data-cleaner-id="<?php echo e($cleaner->id); ?>">
-                            <div class="card-body">
+                            <div class="card-body mb-2">
                             <div class="cleaner-profile-box d-flex align-items-center justify-content-between">
                                 <div class="cleaner-name d-flex align-items-center gap-2">
                                     <?php if($cleaner->profile_picture): ?>
