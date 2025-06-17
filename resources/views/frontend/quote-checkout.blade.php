@@ -2,22 +2,21 @@
 
 @section('content')
 
-<div class="container">
-    <h4 class='my-3 text-center'>Confirm Service</h4>
-    <div class="row d-flex align-items-center justify-content-center">
-        <div class="col-md-7">
-           <div class="row py-5 d-flex justify-content-center">
-                <div class="col-md-10 checkout-box">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                    <div class="cleaner-profile-selected">
+
+
+
+
+<!-- new code --> 
+<div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="d-flex summary-wrapper row-cols-md-2 flex-md-row flex-column">
+
+          <!-- Left Panel -->
+          <div class="left-panel col-md-6">
+            <h4 class="mb-4">Service Details</h4>
+
+            <div class="cleaner-profile-selected">
                         <div class="profile-picturebox">
                                 @if ($cleaner->profile_picture)
                                     <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" width="150">
@@ -28,92 +27,86 @@
                             <p>House Cleaning</p>
                         </div>
                     </div>
+                    
+            <div class="icon-item">
+              <span><i class="bi bi-house-door-fill"></i> Dimensions</span>
+              <p class='mb-0'><span class='selected-beds'>{{ $beds }}</span> BD / <span class='selected-baths'>{{$baths}}</span> BA / <span class='selected-area'>{{$area_sqft}}</span> sqft</p>
+            </div>
+           
 
-                    <div class="selected-items-container mt-3">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>Dimensions</th>
-                                <td class='text-end'><span class='selected-beds'>{{ $beds }}</span> BD / <span class='selected-baths'>{{$baths}}</span> BA / <span class='selected-area'>{{$area_sqft}}</span> sqft</td>
-                            </tr>
-                            <tr>
-                                <th>Start Time</th>
-                                @php
-                                    use Carbon\Carbon;
-                                    $formattedDate = Carbon::parse($selectedDate)->format('D, M d');
-                                @endphp
+            <div class="icon-item">
+              <span><i class="bi bi-clock-fill"></i> Start Time</span>
+              <span>
+                @php
+                    use Carbon\Carbon;
+                    $formattedDate = Carbon::parse($selectedDate)->format('D, M d');
+                @endphp
+                {{ $formattedDate }} at {{ $slot }}
+            </span>
+            </div>
+            <div class="icon-item">
+              <span><i class="bi bi-repeat"></i> Frequency</span>
+              @if($frequency === 'one_time')
+                <span class='text-end'>One Time</span>
+                @elseif($frequency === 'weekly')
+                <span class='text-end'>Every Week</span>
+                @elseif($frequency === 'biweekly')
+                <span class='text-end'>Biweekly</span>
+                @elseif($frequency === 'monthly')
+                <span class='text-end'>Every Month</span>
+                @endif
+            </div>
 
-                                <td class='text-end'>
-                                    {{ $formattedDate }} at {{ $slot }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Frequency</th>
-                                @if($frequency === 'one_time')
-                                <td class='text-end'>One Time</td>
-                                @elseif($frequency === 'weekly')
-                                <td class='text-end'>Every Week</td>
-                                @elseif($frequency === 'biweekly')
-                                <td class='text-end'>Biweekly</td>
-                                @elseif($frequency === 'monthly')
-                                <td class='text-end'>Every Month</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                @if($selectedAddons->isNotEmpty())
-                                <th class='d-flex'>Additional Services</th>
-                                <td class='text-end'> 
-                                    
-                                        <ul class='addon-list' style='list-style:none;'>
-                                            @foreach($selectedAddons as $addon)
-                                                <li>{{ $addon->addon_name }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+            <h5 class="mt-4 mb-3">Additional Services</h5>
+            @if($selectedAddons->isNotEmpty())
+                <ul class="additional-list p-0">
+                @if($selectedAddons->isNotEmpty())
+                    @foreach($selectedAddons as $addon)
+                        <li>{{ $addon->addon_name }}</li>
+                    @endforeach
+                @endif
+                </ul>
+            @endif
+          </div>
 
-                    <div class="selected-items-container mt-2">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>One-time Price</th>
-                                <td class='text-end'>${{number_format($oneTimePrice, 2)}}</td>
-                            </tr>
-                            @if(isset($discountAmounts[$frequency]))
-                              
-                                    @if($frequency === 'weekly')
-                                         <tr>  
-                                        <th>Weekly Discount (20% off)</th>
-                                        <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                        </tr>
-                                        @elseif($frequency === 'biweekly')
-                                        <tr>
-                                        <th>Biweekly Discount (10% off)</th>
-                                        <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                        </tr>
-                                        @elseif($frequency === 'monthly')
-                                        <tr>
-                                        <th>Monthly Discount (10% off)</th>
-                                    <td class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</td>
-                                    </tr>
-                                    @endif
-                            
-                            @endif
-                        </table>
-                    </div>
+          <!-- Right Panel -->
+          <div class="right-panel col-md-6">
+            <h4 class="mb-4">Summary</h4>
 
-                    <div class="selected-items-container mt-2">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>Total</th>
-                                <td class='text-end'>${{number_format($discountedPrices[$frequency], 2)}}</td>
-                            </tr>
-                            
-                        </table>
-                    </div>
+            <div class="price-item">
+              <span>One-time Price</span>
+              <span>${{number_format($oneTimePrice, 2)}}</span>
+            </div>
+            <div class="price-item">
+              
+             @if(isset($discountAmounts[$frequency]))
+                
+                    @if($frequency === 'weekly')
+                           
+                        <span>Weekly Discount (20% off)</span>
+                        <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
+                        
+                        @elseif($frequency === 'biweekly')
+                        
+                        <span>Biweekly Discount (10% off)</span>
+                        <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
+                        
+                        @elseif($frequency === 'monthly')
+                       
+                        <span>Monthly Discount (10% off)</span>
+                    <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
+                    
+                    @endif
+            
+            @endif
 
-                    @auth
+            </div>
+            <div class="price-item price-total">
+              <span>Total</span>
+              <span class='text-end'>${{number_format($discountedPrices[$frequency], 2)}}</span>
+            </div>
+
+            @auth
                         @if(Auth::user()->role !== 'admin')
                         <form action="{{ route('book.appointment') }}" method='POST'>
                             @csrf
@@ -155,12 +148,13 @@
                         </button>
                         </div>
                     @endauth
-                    
-                </div>
-           </div>
+
+          </div>
+
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
 <!-- Modal -->
