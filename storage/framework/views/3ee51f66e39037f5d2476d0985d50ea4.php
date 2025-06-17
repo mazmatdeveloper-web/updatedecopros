@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNECwhx76acUzGrfxknooV5O9LJFJSyKA&libraries=places"></script>
     <style>
@@ -48,8 +46,8 @@
         <div class="col-md-4">
             <div id="initial-form" class="mt-2">
                 <h2 class='mb-5'>See available house cleaners</h2>
-                <form action="{{ route('quote.extended') }}" method='GET'>
-                    @csrf
+                <form action="<?php echo e(route('quote.extended')); ?>" method='GET'>
+                    <?php echo csrf_field(); ?>
                     
                     <div class="field-group mb-0">
                         <label class='field_group_label'>Address</label>
@@ -264,10 +262,10 @@
 
     function checkZipcode(zip, address) {
         $.ajax({
-            url: "{{ route('check.zipcode') }}",
+            url: "<?php echo e(route('check.zipcode')); ?>",
             type: "POST",
             data: {
-                _token: "{{ csrf_token() }}",
+                _token: "<?php echo e(csrf_token()); ?>",
                 zipcode: zip
             },
             success: function(response) {
@@ -288,4 +286,5 @@
     }
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros1\echopros\updatedecopros\resources\views/frontend/quote.blade.php ENDPATH**/ ?>

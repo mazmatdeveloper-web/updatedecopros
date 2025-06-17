@@ -359,11 +359,7 @@ class CleanerController extends Controller
     {
         // Validate the request data
         $validated = $request->validate([
-            'service_name' => [
-                'required',
-                'string',
-                Rule::unique('services', 'service_name')->ignore($id),
-            ],
+            'service_name' => 'required|string',
             'service_price' => 'required|numeric|min:0'
         ]);
 
@@ -460,5 +456,18 @@ class CleanerController extends Controller
             return redirect()->back();
         }
     }
+
+    public function delete_availbility($id)
+    {
+        $availiblity = AvailableDate::findorfail($id);
+        $availiblity->delete();
+
+        Alert::toast('Availiblity Deleted Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(5000);
+    
+        return redirect()->back();
+        }
 
 }
