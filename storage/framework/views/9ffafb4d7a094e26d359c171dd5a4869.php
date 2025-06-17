@@ -1,21 +1,19 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center gap-3 mb-24 justify-content-between">
         <div>
-    @if ($cleaner->profile_picture)
-        <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" class='cleaner-profile-picture'>
-    @endif    
-    <h6 class="fw-semibold mb-0">{{ $cleaner->name }}</h6>
+    <?php if($cleaner->profile_picture): ?>
+        <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" class='cleaner-profile-picture'>
+    <?php endif; ?>    
+    <h6 class="fw-semibold mb-0"><?php echo e($cleaner->name); ?></h6>
     </div>
-    @if ($errors->any())
+    <?php if($errors->any()): ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Something went wrong...',
-            html: `{!! implode('<br>', $errors->all()) !!}`,
+            html: `<?php echo implode('<br>', $errors->all()); ?>`,
             position: 'top-end',
             toast: true,
             timer: 500000,
@@ -24,17 +22,17 @@
             timerProgressBar: true,
         });
     </script>
-    @endif
+    <?php endif; ?>
     <div>
         <button  
             data-bs-toggle="modal" 
             data-bs-target="#cleaneraddModal"
-            data-id="{{ $cleaner->id }}" 
-            data-name="{{$cleaner->name}}" 
-            data-email="{{$cleaner->email}}"
-            data-phone="{{$cleaner->phone}}"
-            data-bio="{{$cleaner->bio}}"
-            data-price="{{$cleaner->price}}"
+            data-id="<?php echo e($cleaner->id); ?>" 
+            data-name="<?php echo e($cleaner->name); ?>" 
+            data-email="<?php echo e($cleaner->email); ?>"
+            data-phone="<?php echo e($cleaner->phone); ?>"
+            data-bio="<?php echo e($cleaner->bio); ?>"
+            data-price="<?php echo e($cleaner->price); ?>"
             class="btn btn-primary">Update Profile
         </button>
     </div>
@@ -91,39 +89,39 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bed_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bed_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->beds }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->beds); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                             <td style="display:flex;gap:5px;">
                                                                 <a 
                                                                     style="cursor:pointer;" 
                                                                     data-bs-toggle="modal" 
                                                                     data-bs-target="#AreaSqft"
-                                                                    data-beds-id="{{ $area->id }}"
-                                                                    data-beds="{{ $area->beds }}"
-                                                                    data-no-of-sqft="{{ $area->no_of_sqft }}"
-                                                                    data-bedsprice="{{ $area->price }}"
+                                                                    data-beds-id="<?php echo e($area->id); ?>"
+                                                                    data-beds="<?php echo e($area->beds); ?>"
+                                                                    data-no-of-sqft="<?php echo e($area->no_of_sqft); ?>"
+                                                                    data-bedsprice="<?php echo e($area->price); ?>"
                                                                     class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                                                                 >
                                                                     <iconify-icon icon="lucide:edit" class="menu-icon editbeds"></iconify-icon>
                                                                 </a>
-                                                               <form action="{{ route('delete.beds', $area->id) }}" method="POST" class="d-inline">
-                                                                    @csrf
-                                                                    @method('DELETE')
+                                                               <form action="<?php echo e(route('delete.beds', $area->id)); ?>" method="POST" class="d-inline">
+                                                                    <?php echo csrf_field(); ?>
+                                                                    <?php echo method_field('DELETE'); ?>
                                                                     <button type="submit" class="bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0">
                                                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                                                     </button>
                                                                 </form>
                                                             </td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                             
                                                 </tbody>
                                             </table>
@@ -158,39 +156,39 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->bath_area_sqfts as $index => $area)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->bath_area_sqfts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $area->no_of_sqft }}</td>
-                                                            <td>{{ $area->baths }}</td>
-                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($area->no_of_sqft); ?></td>
+                                                            <td><?php echo e($area->baths); ?></td>
+                                                            <td>$<?php echo e(number_format($area->price, 2)); ?></td>
                                                             <td style="display:flex;gap:5px;">
                                                                 <a 
                                                                     style="cursor:pointer;" 
                                                                     data-bs-toggle="modal" 
                                                                     data-bs-target="#BathAreaSqft"
-                                                                    data-bath-id="{{ $area->id }}"
-                                                                    data-bath="{{ $area->baths }}"
-                                                                    data-bat-no-of-sqft="{{ $area->no_of_sqft }}"
-                                                                    data-bathprice="{{ $area->price }}"
+                                                                    data-bath-id="<?php echo e($area->id); ?>"
+                                                                    data-bath="<?php echo e($area->baths); ?>"
+                                                                    data-bat-no-of-sqft="<?php echo e($area->no_of_sqft); ?>"
+                                                                    data-bathprice="<?php echo e($area->price); ?>"
                                                                     class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                                                                 >
                                                                     <iconify-icon icon="lucide:edit" class="menu-icon editbeds"></iconify-icon>
                                                                 </a>
-                                                               <form action="{{route ('delete.baths', $area->id) }}')}}" method="POST" class="d-inline">
-                                                                    @csrf
-                                                                    @method('DELETE')
+                                                               <form action="<?php echo e(route ('delete.baths', $area->id)); ?>')}}" method="POST" class="d-inline">
+                                                                    <?php echo csrf_field(); ?>
+                                                                    <?php echo method_field('DELETE'); ?>
                                                                     <button type="submit" class="bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0">
                                                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                                                     </button>
                                                                 </form>
                                                             </td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="5" class="text-center">No area sqft options available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -223,26 +221,26 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($cleaner->service as $index => $service)
+                                                    <?php $__empty_1 = true; $__currentLoopData = $cleaner->service; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $service->service_name }}</td>
-                                                            <td>${{ number_format($service->price, 2) }}</td>
+                                                            <td><?php echo e($index + 1); ?></td>
+                                                            <td><?php echo e($service->service_name); ?></td>
+                                                            <td>$<?php echo e(number_format($service->price, 2)); ?></td>
                                                             <td style="display:flex;gap:5px;">
                                                                 <a 
                                                                     style="cursor:pointer;" 
                                                                     data-bs-toggle="modal" 
                                                                     data-bs-target="#ServiceModal"
-                                                                    data-service-id="{{ $service->id }}"
-                                                                    data-service-name="{{ $service->service_name }}"
-                                                                    data-service-price="{{ $service->price }}"
+                                                                    data-service-id="<?php echo e($service->id); ?>"
+                                                                    data-service-name="<?php echo e($service->service_name); ?>"
+                                                                    data-service-price="<?php echo e($service->price); ?>"
                                                                     class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                                                                 >
                                                                     <iconify-icon icon="lucide:edit" class="menu-icon editbeds"></iconify-icon>
                                                                 </a>
-                                                              <form action="{{ route('delete.service', $service->id) }}" method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('DELETE')
+                                                              <form action="<?php echo e(route('delete.service', $service->id)); ?>" method="POST" class="d-inline">
+                                                                <?php echo csrf_field(); ?>
+                                                                <?php echo method_field('DELETE'); ?>
                                                                 <button type="submit" class="bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0">
                                                                     <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                                                 </button>
@@ -250,11 +248,11 @@
 
                                                             </td>
                                                         </tr>
-                                                    @empty
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                         <tr>
                                                             <td colspan="4" class="text-center">No services available.</td>
                                                         </tr>
-                                                    @endforelse
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -273,52 +271,54 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <table class='table w-100'>
-                                                @forelse($cleaner->availableDates as $date)
+                                                <?php $__empty_1 = true; $__currentLoopData = $cleaner->availableDates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $date): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                     <tr>
-                                                        <th>{{ \Carbon\Carbon::parse($date->dates)->format('F j, Y') }}</th>
+                                                        <th><?php echo e(\Carbon\Carbon::parse($date->dates)->format('F j, Y')); ?></th>
                                                         <td class="list-group">
-                                                            @foreach($date->timeSlots as $slot)
+                                                            <?php $__currentLoopData = $date->timeSlots; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slot): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                 
-                                                                    {{ \Carbon\Carbon::parse($slot->start_time)->format('g:i A') }}
+                                                                    <?php echo e(\Carbon\Carbon::parse($slot->start_time)->format('g:i A')); ?>
+
                                                                     -
-                                                                    {{ \Carbon\Carbon::parse($slot->end_time)->format('g:i A') }}
-                                                            @endforeach
+                                                                    <?php echo e(\Carbon\Carbon::parse($slot->end_time)->format('g:i A')); ?>
+
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </td>
-                                                         <td>@if($date->is_disabled === 0)
+                                                         <td><?php if($date->is_disabled === 0): ?>
                                                         <span class='badge bg-danger'>In-Active</span>
-                                                        @else
+                                                        <?php else: ?>
                                                         <span class='badge bg-success'>Active</span>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </td>
                                                          <td style="display:flex;gap:5px;">
                                                         <a 
                                                             style="cursor:pointer;" 
                                                             data-bs-target="#availiblemodel" 
                                                             data-bs-toggle="modal" 
-                                                            data-availible-id="{{ $date->id }}"
-                                                            data-availible="{{ $date->dates }}"
-                                                            data-availible-start="{{ $slot->start_time }}"
-                                                            data-availible-end="{{ $slot->end_time }}"
-                                                            data-availible-interval="{{ $slot->interval }}"
-                                                            data-availible-active="{{ $date->is_disabled }}"
+                                                            data-availible-id="<?php echo e($date->id); ?>"
+                                                            data-availible="<?php echo e($date->dates); ?>"
+                                                            data-availible-start="<?php echo e($slot->start_time); ?>"
+                                                            data-availible-end="<?php echo e($slot->end_time); ?>"
+                                                            data-availible-interval="<?php echo e($slot->interval); ?>"
+                                                            data-availible-active="<?php echo e($date->is_disabled); ?>"
                                                             class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
                                                         >
                                                             <iconify-icon icon="lucide:edit" class="menu-icon editbeds"></iconify-icon>
                                                         </a>
-                                                        <form action="{{ route('delete.availiblity', $date->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
+                                                        <form action="<?php echo e(route('delete.availiblity', $date->id)); ?>" method="POST" class="d-inline">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
                                                 <button type="submit" class="bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0">
                                                     <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                                 </button>
                                             </form>
                                                     </td>
                                                     </tr>
-                                                @empty
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                                 <tr>
                                                     <td>No one-time availability.</td>
                                                 </tr>
-                                                @endforelse
+                                                <?php endif; ?>
                                             </table>
                                         </div>
                                     </div>
@@ -331,19 +331,21 @@
                                         <div class="card-body">
                                             <table class='table w-100'>
 
-                                            @forelse($cleaner->recurringAvailabilities as $recurring)
+                                            <?php $__empty_1 = true; $__currentLoopData = $cleaner->recurringAvailabilities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recurring): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
 
                                             <tr>
-                                                <th>{{ ucfirst($recurring->day_of_week) }}</th>
-                                                <td>  {{ \Carbon\Carbon::parse($recurring->start_time)->format('g:i A') }}
+                                                <th><?php echo e(ucfirst($recurring->day_of_week)); ?></th>
+                                                <td>  <?php echo e(\Carbon\Carbon::parse($recurring->start_time)->format('g:i A')); ?>
+
                                                     -
-                                                    {{ \Carbon\Carbon::parse($recurring->end_time)->format('g:i A') }}
+                                                    <?php echo e(\Carbon\Carbon::parse($recurring->end_time)->format('g:i A')); ?>
+
                                                 </td>
-                                                <td>@if($recurring->is_active === 0)
+                                                <td><?php if($recurring->is_active === 0): ?>
                                                     <span class='badge bg-danger'>In-Active</span>
-                                                    @else
+                                                    <?php else: ?>
                                                     <span class='badge bg-success'>Active</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td>
                                                 <a 
@@ -351,12 +353,12 @@
                                                     data-bs-toggle="modal" 
 
                                                     data-bs-target="#timeslotmodal"
-                                                    data-id="{{ $recurring->id }}"
-                                                    data-day="{{ $recurring->day_of_week }}"
-                                                    data-start="{{ $recurring->start_time }}"
-                                                    data-end="{{ $recurring->end_time }}"
-                                                    data-interval="{{ $recurring->interval }}"
-                                                    data-active="{{ $recurring->is_active }}"
+                                                    data-id="<?php echo e($recurring->id); ?>"
+                                                    data-day="<?php echo e($recurring->day_of_week); ?>"
+                                                    data-start="<?php echo e($recurring->start_time); ?>"
+                                                    data-end="<?php echo e($recurring->end_time); ?>"
+                                                    data-interval="<?php echo e($recurring->interval); ?>"
+                                                    data-active="<?php echo e($recurring->is_active); ?>"
                                                     class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle open-timeslot-modal"
                                                 > 
                                                     <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
@@ -364,11 +366,11 @@
                                                 </td>
                                             </tr>
 
-                                            @empty
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                             <tr>
                                                 <td>No recurring availability.</td>
                                             </tr>
-                                            @endforelse
+                                            <?php endif; ?>
 
                                             </table>
                                         </div>
@@ -389,14 +391,14 @@
 <div class="modal-dialog">
     <div class="modal-content">
     <form id="dynamicForm" method="POST" action="">
-        @csrf
+        <?php echo csrf_field(); ?>
         <div class="modal-header">
         <h6 class="modal-title" id="optionModalLabel">Add Option</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-        <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+        <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
 
         <!-- Sqft -->
         <div class="mb-3" id="sqftGroup">
@@ -478,36 +480,36 @@
 
     <!-- Modal Body with Form -->
     <div class="modal-body">
-    <form action="{{ route('cleaners.update') }}" method='POST' enctype="multipart/form-data">
-            @csrf
+    <form action="<?php echo e(route('cleaners.update')); ?>" method='POST' enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <label class="form-label">Full Name</label>
-                        <input type="text" name="name" class="form-control" id="firstname" value='{{ $cleaner->name }}'>
-                        <input type="hidden" name="cleaner_id" class="form-control" id="cleaner_id" value='{{ $cleaner->id }}'>
+                        <input type="text" name="name" class="form-control" id="firstname" value='<?php echo e($cleaner->name); ?>'>
+                        <input type="hidden" name="cleaner_id" class="form-control" id="cleaner_id" value='<?php echo e($cleaner->id); ?>'>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" value='{{$cleaner->email}}'>
+                        <input type="email" name="email" class="form-control" value='<?php echo e($cleaner->email); ?>'>
                     </div>
                 </div>
                 <div class='row gy-3'>
                     <div class="col-12">
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" class="form-control" id="cleaner_phone" value='{{$cleaner->phone}}'>
+                        <input type="text" name="phone" class="form-control" id="cleaner_phone" value='<?php echo e($cleaner->phone); ?>'>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Bio</label>
-                        <textarea name="bio" class="form-control" rows="4" cols="50" id="cleaner_bio">{{$cleaner->bio}}</textarea>
+                        <textarea name="bio" class="form-control" rows="4" cols="50" id="cleaner_bio"><?php echo e($cleaner->bio); ?></textarea>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Price</label>
-                        <input type="text" name="price" class="form-control" value='{{$cleaner->price}}'>
+                        <input type="text" name="price" class="form-control" value='<?php echo e($cleaner->price); ?>'>
                     </div>
                     <div class="col-12">
                         <label for="profile_picture">Profile Picture</label>
                         <input type="file" name='profile_picture' id='profile_picture' class='form-control'>
-                        <img style='width:130px;' src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="">
+                        <img style='width:130px;' src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="">
                     </div>
                     <div class="col-12">
                         <label class="form-label">Password</label>
@@ -528,8 +530,8 @@
 <!-- Timeslots Modal -->
 <div class="modal fade" id="timeslotmodal" tabindex="-1" aria-labelledby="timeslotmodalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="{{ route('recurring-availability.update') }}" method="POST">
-            @csrf
+        <form action="<?php echo e(route('recurring-availability.update')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="modal_id">
             <div class="modal-content">
                 <div class="modal-header">
@@ -573,7 +575,7 @@
 <div class="modal fade" id="availiblemodel" tabindex="-1" aria-labelledby="availiblemodel" aria-hidden="true">
     <div class="modal-dialog">
         <form action="" method="POST" id="availibilityForm">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="modal_id">
             <div class="modal-content">
                 <div class="modal-header">
@@ -618,7 +620,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
     <form id="bedsform" method="POST" action="">
-        @csrf
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="id" id="beds_id">
         <div class="modal-header">
         <h6 class="modal-title">Edit Bedroom Option</h6>
@@ -626,7 +628,7 @@
         </div>
 
         <div class="modal-body">
-        <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+        <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
         <input type="hidden" name="no_of_sqft" id="no_of_sqft"> <!-- Hidden field for combined value -->
 
         <!-- Sqft Range (split into from/to) -->
@@ -646,9 +648,9 @@
             <label>Number of Bedrooms</label>
             <select name="beds" class='form-control' id="bedsroom" required>
                 <option value="">Select number of bedrooms</option>
-                @for($i = 1; $i <= 7; $i++)
-                <option value="{{ $i }}">{{ $i }}</option>
-                @endfor
+                <?php for($i = 1; $i <= 7; $i++): ?>
+                <option value="<?php echo e($i); ?>"><?php echo e($i); ?></option>
+                <?php endfor; ?>
             </select>
         </div>
         
@@ -678,7 +680,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <form id="bathform" method="POST" action="">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="bath_id">
             <div class="modal-header">
                 <h6 class="modal-title">Edit Bathroom Option</h6>
@@ -686,7 +688,7 @@
             </div>
 
             <div class="modal-body">
-                <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+                <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
                 <input type="hidden" name="no_of_sqft" id="bath_no_of_sqft">
 
                 <!-- Sqft Range (split into from/to) -->
@@ -706,9 +708,9 @@
                     <label>Number of Bathrooms</label>
                     <select name="baths" class='form-control' id="bathsroom" required>
                         <option value="">Select number of bathrooms</option>
-                        @for($i = 1; $i <= 7; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
+                        <?php for($i = 1; $i <= 7; $i++): ?>
+                            <option value="<?php echo e($i); ?>"><?php echo e($i); ?></option>
+                        <?php endfor; ?>
                     </select>
                 </div>
                 
@@ -737,7 +739,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <form id="serviceform" method="POST" action="">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="service_id">
             <div class="modal-header">
                 <h6 class="modal-title">Edit Services </h6>
@@ -745,7 +747,7 @@
             </div>
 
             <div class="modal-body">
-                <input type="hidden" name="cleaner_id" value="{{ $cleaner->id ?? '' }}">
+                <input type="hidden" name="cleaner_id" value="<?php echo e($cleaner->id ?? ''); ?>">
 
                  <!-- Service Name -->
                  <div class="mb-3" id="serviceGroup">
@@ -775,13 +777,13 @@
 <script>
 const forms = {
 bedroom: {
-    action: '{{ route("insert.bed.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bed.areasqft.options")); ?>'
 },
 bathroom: {
-    action: '{{ route("insert.bath.areasqft.options") }}'
+    action: '<?php echo e(route("insert.bath.areasqft.options")); ?>'
 },
 service: {
-    action: '{{ route("insert.service") }}'
+    action: '<?php echo e(route("insert.service")); ?>'
 }
 };
 
@@ -937,4 +939,6 @@ document.querySelectorAll('[data-bs-target="#availiblemodel"]').forEach(button =
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros1\echopros\updatedecopros\resources\views/admin/cleaners/single_cleaner/profile.blade.php ENDPATH**/ ?>
