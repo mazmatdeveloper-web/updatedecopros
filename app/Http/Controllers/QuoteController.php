@@ -41,10 +41,11 @@ class QuoteController extends Controller
             'service_duration' => $request->service_duration,
             'service_type' => $request->service_type,
             'pets' => $request->pets,
-            'beds' => $request->beds,
-            'baths' => $request->baths,
-            'sq_ft' => $request->sq_ft
+            'beds' => $request->beds ?? 1,
+            'baths' => $request->baths ?? 1,
+            'sq_ft' => $request->sq_ft ?? "0 - 1000"
         ];
+
 
         $selectedDate = $request->input('date') ?? Carbon::today()->toDateString();
         $dayName = Carbon::parse($selectedDate)->format('l');
@@ -194,6 +195,11 @@ class QuoteController extends Controller
                 'cleaner_id' => $cleaner->id,
                 'cleaner_name' => $cleaner->name,
                 'price' => number_format($finalPrice, 0),
+                'basePrice' => $basePrice,
+                'servicePriceModel' => $servicePriceModel,
+                'addons' => $addons,
+                'basePrice' => $basePrice,
+                'discount' => $filters['service_duration'] == 'one_time' ? null : $discount,
             ];
         }
     
@@ -268,6 +274,7 @@ class QuoteController extends Controller
 
         // Make sure to pass base price too
         $oneTimePrice = $totalPrice;
+
 
         return view('frontend.quote-checkout', compact(
             'cleaner',

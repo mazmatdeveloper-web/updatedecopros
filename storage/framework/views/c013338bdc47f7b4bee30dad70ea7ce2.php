@@ -1,21 +1,20 @@
 <?php $__env->startSection('content'); ?>
 
-<div class="container">
-    <h4 class='my-3 text-center'>Confirm Service</h4>
-    <div class="row d-flex align-items-center justify-content-center">
-        <div class="col-md-7">
-           <div class="row py-5">
-                <div class="col-md-7">
-                <?php if($errors->any()): ?>
-                    <div class="alert alert-danger">
-                        <ul>
-                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($error); ?></li>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-                    <div class="cleaner-profile-selected">
+
+
+
+
+<!-- new code --> 
+<div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="d-flex summary-wrapper row-cols-md-2 flex-md-row flex-column">
+
+          <!-- Left Panel -->
+          <div class="left-panel col-md-6">
+            <h4 class="mb-4">Service Details</h4>
+
+            <div class="cleaner-profile-selected">
                         <div class="profile-picturebox">
                                 <?php if($cleaner->profile_picture): ?>
                                     <img src="<?php echo e(asset('storage/' . $cleaner->profile_picture)); ?>" alt="Profile Picture" width="150">
@@ -26,96 +25,93 @@
                             <p>House Cleaning</p>
                         </div>
                     </div>
+                    
+            <div class="icon-item">
+              <span><i class="bi bi-house-door-fill"></i> Dimensions</span>
+              <p class='mb-0'><span class='selected-beds'><?php echo e($beds); ?></span> BD / <span class='selected-baths'><?php echo e($baths); ?></span> BA / <span class='selected-area'><?php echo e($area_sqft); ?></span> sqft</p>
+            </div>
+           
 
-                    <div class="selected-items-container mt-3">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>Dimensions</th>
-                                <td class='text-end'><span class='selected-beds'><?php echo e($beds); ?></span> BD / <span class='selected-baths'><?php echo e($baths); ?></span> BA / <span class='selected-area'><?php echo e($area_sqft); ?></span> sqft</td>
-                            </tr>
-                            <tr>
-                                <th>Start Time</th>
-                                <?php
-                                    use Carbon\Carbon;
-                                    $formattedDate = Carbon::parse($selectedDate)->format('D, M d');
-                                ?>
+            <div class="icon-item">
+              <span><i class="bi bi-clock-fill"></i> Start Time</span>
+              <span>
+                <?php
+                    use Carbon\Carbon;
+                    $formattedDate = Carbon::parse($selectedDate)->format('D, M d');
+                ?>
+                <?php echo e($formattedDate); ?> at <?php echo e($slot); ?>
 
-                                <td class='text-end'>
-                                    <?php echo e($formattedDate); ?> at <?php echo e($slot); ?>
+            </span>
+            </div>
+            <div class="icon-item">
+              <span><i class="bi bi-repeat"></i> Frequency</span>
+              <?php if($frequency === 'one_time'): ?>
+                <span class='text-end'>One Time</span>
+                <?php elseif($frequency === 'weekly'): ?>
+                <span class='text-end'>Every Week</span>
+                <?php elseif($frequency === 'biweekly'): ?>
+                <span class='text-end'>Biweekly</span>
+                <?php elseif($frequency === 'monthly'): ?>
+                <span class='text-end'>Every Month</span>
+                <?php endif; ?>
+            </div>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Frequency</th>
-                                <?php if($frequency === 'one_time'): ?>
-                                <td class='text-end'>One Time</td>
-                                <?php elseif($frequency === 'weekly'): ?>
-                                <td class='text-end'>Every Week</td>
-                                <?php elseif($frequency === 'biweekly'): ?>
-                                <td class='text-end'>Biweekly</td>
-                                <?php elseif($frequency === 'monthly'): ?>
-                                <td class='text-end'>Every Month</td>
-                                <?php endif; ?>
-                            </tr>
-                            <tr>
-                                <?php if($selectedAddons->isNotEmpty()): ?>
-                                <th class='d-flex'>Additional Services</th>
-                                <td class='text-end'> 
-                                    
-                                        <ul class='addon-list' style='list-style:none;'>
-                                            <?php $__currentLoopData = $selectedAddons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <li><?php echo e($addon->addon_name); ?></li>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </ul>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+            <h5 class="mt-4 mb-3">Additional Services</h5>
+            <?php if($selectedAddons->isNotEmpty()): ?>
+                <ul class="additional-list p-0">
+                <?php if($selectedAddons->isNotEmpty()): ?>
+                    <?php $__currentLoopData = $selectedAddons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($addon->addon_name); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
+                </ul>
+            <?php endif; ?>
+          </div>
 
-                    <div class="selected-items-container mt-2">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>One-time Price</th>
-                                <td class='text-end'>$<?php echo e(number_format($oneTimePrice, 2)); ?></td>
-                            </tr>
-                            <?php if(isset($discountAmounts[$frequency])): ?>
-                            <tr>     
-                                    <?php if($frequency === 'weekly'): ?>
-                                        <th>Weekly Discount (20% off)</th>
-                                        <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
-                                    <?php elseif($frequency === 'biweekly'): ?>
-                                        <th>Biweekly Discount (10% off)</th>
-                                        <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
-                                    <?php elseif($frequency === 'one_time'): ?>
-                                        <th></th>
-                                        <td class="text-end text-success"></td>
-                                    <?php elseif($frequency === 'monthly'): ?>
-                                    <th>Monthly Discount (10% off)</th>
-                                    <td class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></td>
-                                    <?php endif; ?>
-                            </tr>
-                            <?php endif; ?>
-                        </table>
-                    </div>
+          <!-- Right Panel -->
+          <div class="right-panel col-md-6">
+            <h4 class="mb-4">Summary</h4>
 
-                    <div class="selected-items-container mt-2">
-                        <table class='selected-items-table w-100'>
-                            <tr>
-                                <th>Total</th>
-                                <td class='text-end'>$<?php echo e(number_format($discountedPrices[$frequency], 2)); ?></td>
-                            </tr>
-                            
-                        </table>
-                    </div>
+            <div class="price-item">
+              <span>One-time Price</span>
+              <span>$<?php echo e(number_format($oneTimePrice, 2)); ?></span>
+            </div>
+            <div class="price-item">
+              
+             <?php if(isset($discountAmounts[$frequency])): ?>
+                
+                    <?php if($frequency === 'weekly'): ?>
+                           
+                        <span>Weekly Discount (20% off)</span>
+                        <span class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></span>
+                        
+                        <?php elseif($frequency === 'biweekly'): ?>
+                        
+                        <span>Biweekly Discount (10% off)</span>
+                        <span class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></span>
+                        
+                        <?php elseif($frequency === 'monthly'): ?>
+                       
+                        <span>Monthly Discount (10% off)</span>
+                    <span class="text-end text-success">- $<?php echo e(number_format($discountAmounts[$frequency], 2)); ?></span>
+                    
+                    <?php endif; ?>
+            
+            <?php endif; ?>
 
-                    <?php if(auth()->guard()->check()): ?>
+            </div>
+            <div class="price-item price-total">
+              <span>Total</span>
+              <span class='text-end'>$<?php echo e(number_format($discountedPrices[$frequency], 2)); ?></span>
+            </div>
+
+            <?php if(auth()->guard()->check()): ?>
                         <?php if(Auth::user()->role !== 'admin'): ?>
                         <form action="<?php echo e(route('book.appointment')); ?>" method='POST'>
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name='cleaner_id' value='<?php echo e($cleaner->id); ?>'>
                             <input type="hidden" name='customer_id' value='<?php echo e(Auth::user()->id); ?>'>
-                            <input type="hidden" name='beds_area_sqft_id' value='<?php echo e($bedPriceModel->id); ?>'>
+                            <input type="hidden" name='beds_area_sqft_id' value='<?php echo e($bedPriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='baths_area_sqft_id' value='<?php echo e($bathPriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='service_id' value='<?php echo e($servicePriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='discount_label' value='<?php echo e($frequency); ?>'>
@@ -151,12 +147,13 @@
                         </button>
                         </div>
                     <?php endif; ?>
-                    
-                </div>
-           </div>
+
+          </div>
+
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
 <!-- Modal -->

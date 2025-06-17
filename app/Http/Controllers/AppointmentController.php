@@ -45,7 +45,7 @@ class AppointmentController extends Controller
             'customer_id' => $data['customer_id'],
             'beds_area_sqft_id' => $data['beds_area_sqft_id'],
             'baths_area_sqft_id' => $data['baths_area_sqft_id'],
-            'service_id' => $data['service_id'],
+            'service_id' => $data['service_id'] ?? 14,
             'discount_label' => $data['discount_label'],
             'discount_price' => $data['discount_price'] ?? 0,
             'total_price' => $data['total_price'],

@@ -1,4 +1,16 @@
-.zipcodemodal .modal-content, .pillmodal  .modal-content{
+@font-face {
+    font-family: 'Outfit';
+    src: url('/Outfit/Outfit-VariableFont_wght.ttf') format('ttf'),
+         url('/Outfit/Outfit-VariableFont_wght.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* *{
+    font-family: 'Outfit', sans-serif;
+} */
+
+/* .zipcodemodal .modal-content, .pillmodal  .modal-content{
     padding: 0px !important;
     border-radius: 0px !important;
 }
@@ -27,10 +39,87 @@
 }
 h5#zipcodeModalLabel {
     font-weight: 700;
-}
+} */
 *{
     font-family: sans-serif;
 }
+
+
+
+.modal-heading {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+.modal-label {
+    font-size: 20px;
+    font-weight: 500;
+    color: #006838 !important;
+    letter-spacing: -1px;
+}
+.zipcode-field {
+    padding: 13px !important;
+    font-size: 15px !important;
+    border: 2px solid #004827 !important;
+    border-radius: 0px !important;
+}
+.zipcode-field:focus {
+    box-shadow: none !important;
+    border: 2px solid #40D100 !important;
+}
+.zipcode-submit {
+    background: #006838;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-radius: 0px;
+    border: 0;
+    height: 100%;
+    box-shadow: 4px 4px 0px -1px #40D100;
+}
+.zipcodemodal .modal-content {
+    border-radius: 0px;
+    padding: 20px;
+    border: 3px solid #00800040;
+}
+.modal-para{
+    font-size:12px;
+}
+
+/* .cart-col{
+    background: #006838;
+    padding: 25px !important;
+    color: white;
+} */
+.dimensions-table td, .frequency-table td, .additional-services-table td, .total-price-table td{
+    text-align: end;
+}
+.dimensions-div, .additional-services-div {
+    padding: 10px;
+    border: 1px dashed #40D100;
+}
+.frequency-div h3 {
+    font-size: 18px;
+    margin-bottom: 0px !important;
+}
+.summary-labels {
+    font-size: 15px;
+    letter-spacing: 0;
+    font-weight: 600;
+    color: #0c3623;
+}
+.total-price-table th {
+    font-size: 20px;
+    font-weight: 500;
+}
+.total-price-table td {
+    font-size: 35px;
+}
+
+
+
+
 /* Container of suggestions */
 .pac-container {
     z-index: 10000 !important; /* Ensure it appears above modals if needed */
@@ -62,7 +151,7 @@ h5#zipcodeModalLabel {
   }
   #error{
     font-weight: 700;
-    font-size: 12px;
+    font-size: 14px;
     text-transform: math-auto;
   }
   #initial-form h2{
@@ -114,9 +203,7 @@ h5#zipcodeModalLabel {
     margin: 5px 0px;
     font-size: 13px;
 }
-.pill-btn:hover{
-    background:#40D109;
-}
+
 span.seperator {
     color: #d2d2d2;
 }
@@ -203,9 +290,9 @@ span.seperator {
     left: 0;
 }
 
-.main-content{
+/* .main-content{
     margin-left: 25%;
-}
+} */
 .more-options {
     display: flex;
     align-items: center;
@@ -219,13 +306,13 @@ span.seperator {
     display: inline-block;
     color: #03502d;
     font-weight: 400;
-    border-radius: 1px;
+    border-radius: 4px;
     margin: 0 5px 10px 0px;
-    width: 110px;
+    width: 87px;
     text-align: center;
     padding: 4px 0px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 13px;
 }
 .timeslotstext:hover {
    
@@ -276,12 +363,12 @@ span.seperator {
 .cleaner-name-box h4{
     font-size: 18px;
 }
-.selected-items-container {
+/* .selected-items-container {
     background: white;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 14px 1px #d3d3d357;
-}
+} */
 .selected-items-table td{
     color:#929292;
     font-size: 15px;
@@ -426,25 +513,287 @@ ul.list-unstyled li {
     text-decoration: none;
     font-size: 20px;
 }
-.loginbtn {
-    background: #0d6efd;
+.continuebtn {
+    background: #016738;
     color: white;
     border: 0;
     width: 100%;
-    padding: 8px 0px;
+    padding: 15px 0px;
     margin-top: 10px;
     border-radius: 3px;
+    font-size: 20px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px 0px #c1c1c1;
 }
-.continuebtn{
-    background: #2d6a4f;
+.loginbtn{
+    background: #40d100;
     color: white;
     border: 0;
     width: 100%;
-    padding: 8px 0px;
+    padding: 12px 0px;
     margin-top: 10px;
     border-radius: 3px;
+    font-size: 20px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px 0px #c1c1c1;
+}
+
+#cleanersContainer .card-body {
+    border-radius: 7px;
+    box-shadow: 4px 4px 1px 0px #e0e0e0;
+    border: 1px solid #b6b7b8;
+    transition: .2s all ease-in-out;
+}
+#cleanersContainer .card-body:hover {
+    border-radius: 7px;
+    box-shadow: 4px 4px 1px 0px #40d100;
+}
+span.price-value {
+    font-size: 30px;
+    font-weight: 500;
+    color: #016738;
+}
+.avialable-badge {
+    background: #016738;
+    padding: 4px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}
+.base_price {
+    font-size: 23px;
+    color: #aeaeae;
+    margin-right: 3px;
+    text-decoration: line-through;
+}
+.checkout-box {
+    box-shadow: 0px 0px 20px 2px #8080801c;
+    padding: 30px !important;
+}
+.selected-items-container {
+    font-size: 16px;
+}
+.selected-items-table tr {
+    border-bottom: 1px solid #d3d3d37d;
+}
+.selected-items-table {
+    line-height: 2em;
+}
+
+.form-group-field {
+    position: relative;
+}
+
+.addons-div {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 250px;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.more-options {
+    margin-bottom: 5px;
+}
+.more-options label{
+    margin-left: 4px;
+}
+form.filters-form {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    column-gap: 8px;
+}
+.timeslotstext.selected {
+    background-color: #40d100;
+    color: white;
+    border-color: #40d100;
+}
+.form-group-field select {
+    font-size: 15px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+}
+button.pill-btn {
+    background: white;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    color: black;
+    margin: 0;
+}
+button#toggleAddons {
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    padding: 8px 10px;
+}
+.date-div {
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+input#dateInput {
+    width: 330px !important;
+    margin-right: 10px;
+    padding: 7px 10px;
+    font-size: 20px;
+}
+
+.cart-col {
+    border-left: 1px solid #d3d3d361;
+    padding: 30px;
+}
+.dimensions-div, .additional-services-div {
+    border: 1px solid #8080808c;
+    box-shadow: 4px 4px 1px 0px #40d114c7;
+    border-radius: 4px;
+}
+.cart-col {
+    padding: 30px !important;
+}
+.frequency-div {
+    border-radius: 4px;
+    border: 1px solid gray;
+    padding: 10px;
+    background: #40d100;
+    color: white;
+    box-shadow: 4px 4px 1px 0px #0f5434;
+}
+
+
+
+body {
+    background: #f4f6f8;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .summary-wrapper {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .left-panel {
+    background: #006838;
+    color: white;
+    padding: 30px;
+  }
+
+  .right-panel {
+    padding: 30px;
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  .icon-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .icon-item i {
+    margin-right: 8px;
+    color: #3FD100
+  }
+
+  .price-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .price-total {
+    font-weight: bold;
+    font-size: 18px;
+    border-top: 2px solid #dee2e6;
+    padding-top: 12px;
+  }
+ol, ul {
+  padding-left: 0rem;
+}
+.additional-list li {
+list-style: none;
+margin-left: 0;
+margin-bottom: 6px;
+font-size: 14px;
+color: #fff;
+text-align: left;
+position: relative;
+padding-left: 20px; /* space for the arrow */
+}
+
+.additional-list li::before {
+content: "»";
+position: absolute;
+left: 0;
+color: #fff;
+font-weight: bold;
+}  
+
+ .btn-checkout {
+font-size: 16px;
+padding: 12px 20px;
+border-radius: 12px;
+background-color: #3FD100;
+border: none;
+color: #fff;
+transition: background 0.3s ease;
+}
+.login-form input, .register-form input {
+    padding: 10PX;
+    border-radius: 4px;
+    border: 1px solid lightgray;
+    color: black;
 }
 
 
 
 
+.btn-checkout:hover {
+background-color: #34b800; /* Slightly darker green on hover */
+}
+
+  @media (max-width: 768px) {
+    .row-cols-md-2 {
+      flex-direction: column;
+    }
+
+    .left-panel {
+      border-bottom: 1px solid #dee2e6;
+    }
+  }
