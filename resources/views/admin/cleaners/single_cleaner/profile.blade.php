@@ -241,6 +241,7 @@
                                                                     {{ \Carbon\Carbon::parse($slot->end_time)->format('g:i A') }}
                                                             @endforeach
                                                         </td>
+
                                                     </tr>
                                                 @empty
                                                 <tr>
@@ -360,11 +361,6 @@
           </div>
 
 
-          <!-- Service Name -->
-          <div class="mb-3" id="serviceGroup">
-            <label>Service Name</label>
-            <input type="text" name="service_name" class="form-control" placeholder="e.g. Deep Cleaning">
-          </div>
 
           <!-- Price -->
           <div class="mb-3" id="priceGroup">
@@ -621,33 +617,7 @@ const editForms = {
   }
 };
 
-$(document).on('click', '.edit-option-btn', function () {
-  const type = $(this).data('type');
-  const id = $(this).data('id');
-  const data = $(this).data('record');
 
-  const formMeta = editForms[type];
-  $('#editForm').attr('action', formMeta.actionBase + id);
-  $('#edit_id').val(data.id); 
-  // Hide all
-  $('#editSqftGroup, #editSqftGroup2, #editBedGroup, #editServiceGroup, #editPriceGroup').hide();
-
-  // Show relevant fields
-  formMeta.fieldsToShow.forEach(id => $('#' + id).show());
-
-  // Populate fields
-  if (data.no_of_sqft) {
-    $('#edit_no_of_sqft').val(data.no_of_sqft.trim());
-    } else {
-        $('#edit_no_of_sqft').val('');
-    }
-  $('#edit_beds').val(data.beds ?? '');
-  $('#edit_service_name').val(data.service_name ?? '');
-  $('#edit_price').val(data.price ?? '');
-
-  // Show modal
-  const modal = new bootstrap.Modal(document.getElementById('editOptionModal'));
-  modal.show();
 });
 
 </script>

@@ -59,6 +59,8 @@ Route::delete('delete-services/{id}',[CleanerController::class,'delete_service']
 // Cleaner Availible Dates
 Route::get('edit-availible-date/{id}',[CleanerController::class,'edit_cleaner_availible_dates'])->name('edit.availible.dates');
 Route::post('/update-availible/date/{id}', [CleanerController::class, 'updateAvailability'])->name('update.availinle.date');
+Route::delete('delete-availiblity/{id}',[CleanerController::class,'delete_availbility'])->name('delete.availiblity');
+
 
 Route::get('quote', [QuoteController::class, 'quote_page'])->name('quote');
 Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zipcode');

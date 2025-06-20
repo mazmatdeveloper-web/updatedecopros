@@ -1,6 +1,4 @@
-@extends('admin.layouts.app')
-
-@section('admin_content')
+<?php $__env->startSection('admin_content'); ?>
 <style>
     .form-check {
     border: 2px solid #d8d8d8;
@@ -34,26 +32,27 @@
     
     <div class="row">
         <div class="col-md-12">
-            <form method="POST" action="{{ route('availability.store') }}">
-                @csrf
+            <form method="POST" action="<?php echo e(route('availability.store')); ?>">
+                <?php echo csrf_field(); ?>
 
                 <!-- Cleaner Selection -->
                 <div class="mb-3">
                     <label>Select Cleaner:</label><br>
                    <div class="form-group d-flex gap-3 align-items-center" required>
                     
-                    @foreach($cleaners as $cleaner)
+                    <?php $__currentLoopData = $cleaners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cleaner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="form-check d-flex align-items-center">
-                            <input class="form-check-input" type="radio" name="cleaner_id" id="cleaner_{{ $cleaner->id }}" value="{{ $cleaner->id }}" required>
-                            <label class="form-check-label" for="cleaner_{{ $cleaner->id }}">
-                                {{ $cleaner->name }}
+                            <input class="form-check-input" type="radio" name="cleaner_id" id="cleaner_<?php echo e($cleaner->id); ?>" value="<?php echo e($cleaner->id); ?>" required>
+                            <label class="form-check-label" for="cleaner_<?php echo e($cleaner->id); ?>">
+                                <?php echo e($cleaner->name); ?>
+
                             </label>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 </div>
-
+                <div>
                     <button class="btn btn-primary" type="button" id="recurring">Recurring Availability<button>
                     <button class="btn btn-danger mx-3" type="button" id="specific">Specific Date<button>
                 </div>
@@ -64,9 +63,9 @@
                         <div class="d-flex gap-2 mb-2 recurring-row">
                             <select name="recurring[0][day]" class="form-control">
                                 <option value="">Select Day</option>
-                                @foreach(['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as $day)
-                                    <option value="{{ $day }}">{{ ucfirst($day) }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($day); ?>"><?php echo e(ucfirst($day)); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <input type="time" name="recurring[0][start_time]" class="form-control" />
                             <input type="time" name="recurring[0][end_time]" class="form-control" />
@@ -135,9 +134,9 @@
         div.innerHTML = `
             <select name="recurring[${recurringIndex}][day]" class="form-control">
                 <option value="">Select Day</option>
-                @foreach(['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as $day)
-                    <option value="{{ $day }}">{{ ucfirst($day) }}</option>
-                @endforeach
+                <?php $__currentLoopData = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($day); ?>"><?php echo e(ucfirst($day)); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
             <input type="time" name="recurring[${recurringIndex}][start_time]" class="form-control" />
             <input type="time" name="recurring[${recurringIndex}][end_time]" class="form-control" />
@@ -204,22 +203,6 @@
 <script>
 jQuery(document).ready(function(){
     $('#recurring').click(function(){
-
-        $('#recurring_availiblity').toggle();
-        $('#submit_button').toggle();
-         
-    });
-    $('#specific').click(function(){
-        $('#specific_date').toggle();
-        $('#submit_button').toggle();
-    });
-
-
-    $('.form-check').click(function(){
-        $('.buttons-div').show();
-    })
-
-
         $('#recurring_availiblity').slideDown();
         $('#submit_button').slideDown();
          
@@ -228,7 +211,6 @@ jQuery(document).ready(function(){
         $('#specific_date').slideDown();
         $('#submit_button').slideDown();
     });
-
 });
 </script>
 <script>
@@ -248,6 +230,6 @@ jQuery(document).ready(function(){
 </style>
 
 
-=======
-@endsection
+<?php $__env->stopSection(); ?>
 
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\echopros1\echopros\updatedecopros\resources\views/admin/cleaners/add-availability.blade.php ENDPATH**/ ?>
