@@ -614,6 +614,11 @@ form.filters-form {
     align-items: end;
     justify-content: center;
     column-gap: 8px;
+    padding: 0px 15px 25px;
+    box-shadow: 0px 0px 20px #d3d3d359;
+    border-radius: 6px;
+    background: #40d1000a;
+    border: 1px solid #80808014;
 }
 .timeslotstext.selected {
     background-color: #40d100;
@@ -780,9 +785,71 @@ transition: background 0.3s ease;
     border: 1px solid lightgray;
     color: black;
 }
+.error-div {
+    background: #bf0000;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 21px;
+    font-weight: 600;
+    position: fixed;
+    top:0;
+    width: 100%;
+    z-index: 2;
+}
+.date-button {
+    border: 1px solid gray;
+    border-radius: 6px;
+    background: white;
+    padding: 10px 0px;
+    font-size: 13px;
+    width: 72px;
+    text-align: center;
+}
 
-
-
+.btn-selected {
+    background: #016539;
+    border: #016539;
+    color: white;
+}
+#prevDay, #nextDay {
+    height: 63.59px;
+    background: #d3d3d35e;
+    border: 1px solid #d3d3d35e;
+}
+#prevDay:hover, #nextDay:hover{
+    background: black;
+    color: white;
+    border-color: black;
+}
+.btn-not-selected.disabled {
+    border: 1px solid lightgray;
+    background: transparent;
+}
+.form-group-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #016539;
+}
+.more-options label{
+    color: #434343;
+}
+.form-group-field button, .form-group-field select {
+    border-radius: 6px !important;
+    background: #fff !important;
+    padding: 7px 10px !important;
+    font-size: 14px;
+    line-height: 1.3em;
+}
+.form-group-field{
+    flex: 1;
+}
+a.nav-link {
+    font-weight: 800 !important;
+    color: black;
+}
 
 .btn-checkout:hover {
 background-color: #34b800; /* Slightly darker green on hover */

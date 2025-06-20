@@ -19,7 +19,7 @@ class AppointmentBookedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('New Appointment Booked')
-                    ->view('emails.appointment_email');
+        return $this->subject('Thank you for Booking Appointment')
+                    ->view('emails.booking.customer_new_booking');
     }
 }

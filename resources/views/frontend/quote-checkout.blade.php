@@ -113,7 +113,7 @@
                             <input type="hidden" name='cleaner_id' value='{{ $cleaner->id }}'>
                             <input type="hidden" name='customer_id' value='{{ Auth::user()->id }}'>
                             <input type="hidden" name='beds_area_sqft_id' value='{{ $bedPriceModel->id ?? "" }}'>
-                            <input type="hidden" name='baths_area_sqft_id' value='{{ $bathPriceModel->id ?? "" }}'>
+                            <input type="hidden" name='no_of_baths' value='{{ $baths ?? 0 }}'>
                             <input type="hidden" name='service_id' value='{{ $servicePriceModel->id ?? "" }}'>
                             <input type="hidden" name='discount_label' value='{{ $frequency }}'>
                             <input type="hidden" name='discount_price' value='{{ number_format($discountAmounts[$frequency], 2) }}'>

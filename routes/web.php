@@ -65,6 +65,7 @@ Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zip
 
 Route::get('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
 Route::post('calculate-prices', [QuoteController::class, 'calculatePrices'])->name('calculate.prices');
+Route::post('check-cleaner-service',[CleanerController::class, 'check_service'])->name('check.cleaner.service');
 Route::get('checkout', [QuoteController::class, 'quote_checkout'])->name('quote.checkout');
 Route::get('thank-you',[AppointmentController::class,'thank_you'])->name('quote.thankyou');
 
@@ -76,6 +77,14 @@ Route::post('insert-bath-options',[FiltersController::class,'insert_bath_options
 Route::post('insert-bed-area-sqft-options',[FiltersController::class,'insert_bed_area_sqft_options'])->name('insert.bed.areasqft.options');
 Route::post('insert-bath-area-sqft-options',[FiltersController::class,'insert_bath_area_sqft_options'])->name('insert.bath.areasqft.options');
 Route::post('insert-service',[FiltersController::class,'insert_service'])->name('insert.service');
+
+// Update Bedroom Sqft Option
+Route::post('/bed-area-sqft/update/{id}', [FiltersController::class, 'update_bed_area_sqft_options'])->name('update.bed.areasqft.options');
+Route::delete('/bed-area-sqft/delete/{id}', [FiltersController::class, 'delete_bedrooms'])->name('delete.bed.areasqft.options');
+Route::post('/bathroom-price/update/{id}', [FiltersController::class, 'update_bathroom_price'])->name('update.bathroom.price');
+Route::post('/services/update/{id}', [FiltersController::class, 'update_service'])->name('update.service');
+Route::delete('/service/delete/{id}', [FiltersController::class, 'delete_service'])->name('delete.service');
+
 
 // Cleaner Profile
 Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
