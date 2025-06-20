@@ -19,8 +19,8 @@
     <!-- Header -->
     <div style="background-color:#006838; padding:40px 30px; text-align:center; color:white;">
       <img src="https://cdn.bookingkoala.com/uploads/ecoproz/2025/5/8/1746744044LOGOEcoProz.png" style='width:120px;margin-bottom:20px;' alt="">
-      <h1 style="margin:0; font-size:24px; font-weight:600;">New Booking Received</h1>
-      <p style="margin-top:10px; font-size:14px; color:#d4f7df;">Hello {{ $appointment->customer->name }}, here's the latest booking update.</p>
+      <h1 style="margin:0; font-size:24px; font-weight:600;">Thank you for Booking</h1>
+      <p style="margin-top:10px; font-size:14px; color:#d4f7df;">Hello {{ $appointment->customer->name }}, here's the latest your booking update.</p>
     </div>
 
     <!-- Main Content -->
@@ -31,8 +31,36 @@
         <h3 style="margin-top:0; font-size:16px; font-weight:600; color:#333;">Booking Summary</h3>
         <p style="margin:8px 0;"><strong>Cleaner:</strong> {{ $appointment->cleaner->name }}</p>
         <p style="margin:8px 0;"><strong>Service:</strong> {{ $appointment->service->service_name }}</p>
-        <p style="margin:8px 0;"><strong>Date & Time:</strong> {{ $appointment->appointment_date }} at {{ $appointment->start_time }} - {{ $appointment->end_time }}</p>
+        @php
+            use Carbon\Carbon;
+            $date = Carbon::parse($appointment->appointment_date)->format('D, M d');
+            $startTime = Carbon::parse($appointment->start_time)->format('H:i');
+            $endTime = Carbon::parse($appointment->end_time)->format('H:i');
+        @endphp
+
+        <p style="margin:8px 0;">
+            <strong>Date & Time:</strong> {{ $date }} at {{ $startTime }} - {{ $endTime }}
+        </p>
+        <p><strong>Dimensions:</strong>
+            {{ $appointment->bedsArea->beds ?? '-' }} BD /
+            {{ $appointment->no_of_baths }} BR /
+            {{ $appointment->bedsArea->no_of_sqft ?? '-' }} sqft
+        </p>
         <p style="margin:8px 0;"><strong>Address:</strong> {{ $appointment->address }}</p>
+        <p style="margin:8px 0;"><strong>Additional Notes:</strong> {{ $appointment->additional_notes }}</p>
+      
+        @if(isset($appointment->addons) && $appointment->addons->count())
+            <p><strong>Addons:</strong></p>
+            
+            @foreach ($appointment->addons as $addon)
+                <p>{{ $addon->addon_name }} — ${{ number_format($addon->price, 2) }}</p>
+            @endforeach
+        
+        @endif
+
+        <p style="margin:8px 0;"><strong>Total Price:</strong> ${{ number_format($appointment->total_price, 2) }}</p>
+      
+      
       </div>
 
       <!-- CTA -->

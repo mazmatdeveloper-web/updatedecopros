@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AppointmentBookedMail extends Mailable
+class AppointmentReminderMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,10 +16,13 @@ class AppointmentBookedMail extends Mailable
     {
         $this->appointment = $appointment;
     }
-
+    
     public function build()
     {
-        return $this->subject('Thank you for Booking Appointment')
-                    ->view('emails.booking.customer_new_booking');
+        return $this->subject('Upcoming Appointment Reminder')
+                    ->markdown('emails.reminder.index')
+                    ->with([
+                        'appointment' => $this->appointment
+                    ]);
     }
 }

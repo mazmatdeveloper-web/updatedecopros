@@ -159,7 +159,7 @@ class CleanerController extends Controller
 
     public function cleanerProfile($id)
     {
-        $cleaner = Cleaner::with(['bath_area_sqfts','bed_area_sqfts','service','availableDates.timeSlots','recurringAvailabilities'])->findOrFail($id);
+        $cleaner = Cleaner::with(['bed_area_sqfts','service','availableDates.timeSlots','recurringAvailabilities'])->findOrFail($id);
         return view('admin.cleaners.single_cleaner.profile', compact('cleaner'));
     }
 
@@ -457,17 +457,49 @@ class CleanerController extends Controller
         }
     }
 
-    public function delete_availbility($id)
-    {
-        $availiblity = AvailableDate::findorfail($id);
-        $availiblity->delete();
+public function check_service(Request $request)
+{
+    $cleanerId = $request->input('cleaner_id');
+    $serviceType = $request->input('service_type');
+    $beds = $request->input('beds');
+    $baths = $request->input('baths');
+    $area = $request->input('area');
 
-        Alert::toast('Availiblity Deleted Successfully!', 'success')
+    // Check if service exists for cleaner
+    $serviceExists = Service::where('cleaner_id', $cleanerId)
+        ->where('service_name', $serviceType)
+        ->exists();
+
+    // Check beds + area match in beds_area_sqfts
+    $bedsMatch = BedAreaSqft::where('cleaner_id', $cleanerId)
+        ->where('beds', '>=', $beds)
+        ->where('no_of_sqft', '>=', $area)
+        ->exists();
+
+    $isAvailable = $serviceExists && $bedsMatch;
+
+    if (!$serviceExists) {
+        return response()->json(['exists' => false, 'reason' => 'service']);
+    }
+    if (!$bedsMatch) {
+        return response()->json(['exists' => false, 'reason' => 'beds']);
+    }
+    
+    return response()->json(['exists' => true]);
+}
+
+public function delete_availbility($id)
+{
+    $availiblity = AvailableDate::findOrFail($id);
+    $availiblity->delete();
+
+    Alert::toast('Availability Deleted Successfully!', 'success')
         ->position('top-end')
         ->timerProgressBar()
         ->autoClose(5000);
-    
-        return redirect()->back();
-        }
+
+    return redirect()->back();
+}
+
 
 }

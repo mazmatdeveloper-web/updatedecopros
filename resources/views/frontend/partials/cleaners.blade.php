@@ -1,9 +1,9 @@
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center align-items-stretch">
                 
                 @foreach ($cleaners as $cleaner)
                 
                 <div class="col-md-5">
-                <div class="card mb-2 border-0" data-cleaner-id="{{ $cleaner->id }}">
+                <div class="card mb-2 border-0 h-100" data-cleaner-id="{{ $cleaner->id }}">
                             <div class="card-body mb-2">
                             <div class="cleaner-profile-box d-flex align-items-center justify-content-between">
                                 <div class="cleaner-name d-flex align-items-center gap-2">
@@ -25,7 +25,11 @@
                             </div>    
                                 @if (!empty($cleaner->available_slots))
                                     @foreach ($cleaner->available_slots as $slot)
-                                        <span class='timeslotstext'>{{ $slot }}</span>
+                                    <span class='timeslotstext' 
+                                        data-slot="{{ $slot }}" 
+                                        data-cleaner-id="{{ $cleaner->id }}">
+                                        {{ $slot }}
+                                    </span>
                                     @endforeach
                                 @else
                                     <p class='notavailabletext'>Not available</p>
@@ -36,4 +40,6 @@
                       
                 
                 @endforeach
+                </div>
+
                 </div>
