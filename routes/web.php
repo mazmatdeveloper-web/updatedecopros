@@ -9,6 +9,8 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\API\APIController;
+
 
 Route::get('/', function () {
     return view('home');

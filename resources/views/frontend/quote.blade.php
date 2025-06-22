@@ -26,7 +26,7 @@
                         <div class="mb-3">
                             <label for="autocomplete" class="form-label modal-label">We just need your <strong>ADDRESS</strong> to start.</label>
                             <div class="row">
-                                <div class="col-md-8" style='padding-right:0;'>
+                                <div class="col-md-8 zipfield-col">
                                     <input type="text" id="autocomplete" class="zipcode-field form-control"
                                     placeholder="e.g. Haun Road, Menifee, CA">
                                 </div>

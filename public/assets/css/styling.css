@@ -854,6 +854,9 @@ a.nav-link {
 .btn-checkout:hover {
 background-color: #34b800; /* Slightly darker green on hover */
 }
+.zipfield-col{
+    padding-right: 0 !important;
+}
 
   @media (max-width: 768px) {
     .row-cols-md-2 {
@@ -862,5 +865,20 @@ background-color: #34b800; /* Slightly darker green on hover */
 
     .left-panel {
       border-bottom: 1px solid #dee2e6;
+    }
+    .zipcodemodal .modal-content{
+        padding: 0px;
+    }
+    #initial-form {
+        width: 90% !important;
+        max-width: 90% !important;
+        margin: auto;
+    }
+    .zipfield-col{
+        padding-right: 10px !important;
+    }
+    .zipcode-submit{
+        padding: 10px;
+        margin-top: 2px;
     }
   }
