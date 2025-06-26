@@ -21,11 +21,38 @@
                 <div class="col">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">
                                 <?php echo e($appointment->service->service_name ?? 'N/A'); ?>
 
+                                <?php if($appointment->status == 'pending'): ?>
                                 <span class="badge bg-info"><?php echo e(ucfirst($appointment->status)); ?></span>
+                                <?php elseif($appointment->status == 'confirmed'): ?>
+                                <span class="badge bg-warning"><?php echo e(ucfirst($appointment->status)); ?></span>
+                                <?php elseif($appointment->status == 'cancelled'): ?>
+                                <span class="badge bg-danger"><?php echo e(ucfirst($appointment->status)); ?></span>
+                                <?php elseif($appointment->status == 'completed'): ?>
+                                <span class="badge bg-success"><?php echo e(ucfirst($appointment->status)); ?></span>
+                                <?php endif; ?>
                             </h5>
+                            <div class="d-flex align-items-center gap-1">
+                          <td class='d-flex align-items-center gap-1'>
+                                <a href="<?php echo e(route('edit.appointment', $appointment->id)); ?>">
+                                    <button
+                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle edit-option-btn">
+                                    <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                    </button>
+                                </a>
+                                    <form action="<?php echo e(route('delete.appointment',$appointment->id)); ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this bedroom option?');" style="display:inline;">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                        <button type="submit" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                        </button>
+                                    </form>
+                                </td>
+                            </div>
+                            </div>
                             <p><strong>Cleaner:</strong> <?php echo e($appointment->cleaner->name ?? 'N/A'); ?></p>
                             <p><strong>Date:</strong> <?php echo e(\Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y')); ?></p>
                             <p><strong>Time:</strong> <?php echo e(\Carbon\Carbon::parse($appointment->start_time)->format('H:i')); ?> - <?php echo e(\Carbon\Carbon::parse($appointment->end_time)->format('H:i')); ?></p>
@@ -45,6 +72,7 @@
         <p class="text-muted">No appointments found.</p>
     <?php endif; ?>
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

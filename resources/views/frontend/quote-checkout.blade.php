@@ -8,6 +8,11 @@
 
 <!-- new code --> 
 <div class="container my-5">
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <div class="d-flex summary-wrapper row-cols-md-2 flex-md-row flex-column">
@@ -24,7 +29,7 @@
                         </div>
                         <div class="cleaner-name-box">
                             <h4>{{$cleaner->name}}</h4>
-                            <p>House Cleaning</p>
+                            <p>{{$service}}</p>
                         </div>
                     </div>
                     
@@ -57,8 +62,9 @@
                 @endif
             </div>
 
-            <h5 class="mt-4 mb-3">Additional Services</h5>
+           
             @if($selectedAddons->isNotEmpty())
+            <h5 class="mt-4 mb-3">Additional Services</h5>
                 <ul class="additional-list p-0">
                 @if($selectedAddons->isNotEmpty())
                     @foreach($selectedAddons as $addon)
@@ -108,7 +114,7 @@
 
             @auth
                         @if(Auth::user()->role !== 'admin')
-                        <form action="{{ route('book.appointment') }}" method='POST'>
+                        <form action="{{ route('book.appointment') }}" method='POST' id='payment-form'>
                             @csrf
                             <input type="hidden" name='cleaner_id' value='{{ $cleaner->id }}'>
                             <input type="hidden" name='customer_id' value='{{ Auth::user()->id }}'>
@@ -137,7 +143,15 @@
                             <label class='mt-2' for="additional_notes">Additional Notes</label>
                             <textarea name="additional_notes" class='form-control bg-white text-dark' placeholder='Enter Notes for cleaner' id="additional_notes" cols="30" rows="5"></textarea>
                            
-                            <button class='continuebtn' type='submit'>Continue</button>
+                            {{-- Stripe Card Element --}}
+                            <div class="mt-3">
+                                <label>Card Details</label>
+                                <div id="card-element" class="form-control p-2"></div>
+                            </div>
+
+                            <input type="hidden" name="stripeToken" id="stripeToken">
+
+                            <button class='continuebtn' type='submit' id="pay-button">Book Appointment</button>
                         </form>
                             
                         @endif
@@ -231,4 +245,29 @@
         }
     }
 </script>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    const stripe = Stripe( "{{env('STRIPE_KEY')}}");
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    const form = document.getElementById('payment-form');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const { token, error } = await stripe.createToken(card);
+
+        if (error) {
+            alert(error.message);
+        } else {
+            document.getElementById('stripeToken').value = token.id;
+            form.submit();
+        }
+    });
+</script>
+
 @endsection
