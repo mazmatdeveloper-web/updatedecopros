@@ -33,6 +33,10 @@ return [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
+    'stripe' => [
+        'key' => 'pk_test_51Nlc9SKqDITcCiJxmcLFHxeoDz48lVHslLTCKUWcubCJsHoJ7u1aBW8r9ifSejEHPFOBauSPQKkRTTLFHwNbmkZD00axyzEkI9',
+        'secret' => 'sk_test_51Nlc9SKqDITcCiJxEId17iPPzMWCJcV74TAoHilSOE12fL5xCu09YzB6KEk4lnWS0HKJLEJgPm5pBj5amMSx1q9400MyRCAZeW',
+        ],   
     ],
 
 ];

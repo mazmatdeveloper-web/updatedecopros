@@ -53,7 +53,7 @@
                 </div>
 
                 </div>
-                <div>
+
                     <button class="btn btn-primary" type="button" id="recurring">Recurring Availability<button>
                     <button class="btn btn-danger mx-3" type="button" id="specific">Specific Date<button>
                 </div>
@@ -204,6 +204,22 @@
 <script>
 jQuery(document).ready(function(){
     $('#recurring').click(function(){
+
+        $('#recurring_availiblity').toggle();
+        $('#submit_button').toggle();
+         
+    });
+    $('#specific').click(function(){
+        $('#specific_date').toggle();
+        $('#submit_button').toggle();
+    });
+
+
+    $('.form-check').click(function(){
+        $('.buttons-div').show();
+    })
+
+
         $('#recurring_availiblity').slideDown();
         $('#submit_button').slideDown();
          
@@ -212,6 +228,7 @@ jQuery(document).ready(function(){
         $('#specific_date').slideDown();
         $('#submit_button').slideDown();
     });
+
 });
 </script>
 <script>
@@ -231,4 +248,6 @@ jQuery(document).ready(function(){
 </style>
 
 
+=======
 @endsection
+

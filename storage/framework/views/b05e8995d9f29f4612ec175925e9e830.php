@@ -1,5 +1,20 @@
 <?php $__env->startSection('admin_content'); ?>
+<style>
+    .form-check {
+    border: 2px solid #d8d8d8;
+    border-radius: 5px;
+    padding: 3px 10px;
+    box-shadow: 0px 0px 10px #d3d3d34f;
+}
 
+.form-check-input:checked::before   {
+    background: #026536;
+
+
+}
+
+
+</style>
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
         <h6 class="fw-semibold mb-0">Add Cleaner's Availability</h6>
@@ -14,7 +29,7 @@
                 <li class="fw-medium">Add Cleaner Availability</li>
             </ul>
     </div>
-
+    
     <div class="row">
         <div class="col-md-12">
             <form method="POST" action="<?php echo e(route('availability.store')); ?>">
@@ -22,17 +37,27 @@
 
                 <!-- Cleaner Selection -->
                 <div class="mb-3">
-                    <label for="cleaner_id" class="form-label">Select Cleaner</label>
-                    <select name="cleaner_id" class="form-control" required>
-                        <option value="">--</option>
-                        <?php $__currentLoopData = $cleaners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cleaner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($cleaner->id); ?>"><?php echo e($cleaner->name); ?></option>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select>
+                    <label>Select Cleaner:</label><br>
+                   <div class="form-group d-flex gap-3 align-items-center" required>
+                    
+                    <?php $__currentLoopData = $cleaners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cleaner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input" type="radio" name="cleaner_id" id="cleaner_<?php echo e($cleaner->id); ?>" value="<?php echo e($cleaner->id); ?>" required>
+                            <label class="form-check-label" for="cleaner_<?php echo e($cleaner->id); ?>">
+                                <?php echo e($cleaner->name); ?>
+
+                            </label>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
+                </div>
+                <div class='buttons-div' style='display:none;'>
+                    <button class="btn btn-primary" type="button" id="recurring">Recurring Availability<button>
+                    <button class="btn btn-danger mx-3" type="button" id="specific">Specific Date<button>
+                </div>
                 <!-- Recurring Availability -->
-                <div class="mb-3">
+                <div class="mb-3" id="recurring_availiblity" style="display:none;">
                     <label class="form-label">Select Weekdays</label>
                     <div id="recurring-container">
                         <div class="d-flex gap-2 mb-2 recurring-row">
@@ -60,7 +85,7 @@
                 </div>
 
                 <!-- Specific Date Availability -->
-                <div class="mb-3">
+                <div class="mb-3" id="specific_date" style="display:none;">
                     <label class="form-label">Add Dates Manually</label>
                     <div id="specific-container">
                         <div class="specific-group border rounded p-3 mb-3">
@@ -90,7 +115,7 @@
                     <button type="button" class="btn btn-secondary" onclick="addSpecificGroup()">+ Add Another Date</button>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary mt-2" id="submit_button" style="display:none">Submit</button>
             </form>
 
         </div>
@@ -174,6 +199,43 @@
         slotsContainer.appendChild(slotDiv);
     }
 </script>
-<?php $__env->stopSection(); ?>
 
+<script>
+jQuery(document).ready(function(){
+    $('#recurring').click(function(){
+        $('#recurring_availiblity').toggle();
+        $('#submit_button').toggle();
+         
+    });
+    $('#specific').click(function(){
+        $('#specific_date').toggle();
+        $('#submit_button').toggle();
+    });
+
+
+    $('.form-check').click(function(){
+        $('.buttons-div').show();
+    })
+
+
+});
+</script>
+<script>
+    document.querySelectorAll('input[name="cleaner_id"]').forEach((input) => {
+        input.addEventListener('change', function () {
+            document.querySelectorAll('.form-check').forEach(el => el.classList.remove('selected-cleaner'));
+            this.closest('.form-check').classList.add('selected-cleaner');
+        });
+    });
+</script>
+
+<style>
+.selected-cleaner {
+    background: #40d10978;
+    border-radius: 5px;
+}
+</style>
+
+
+<?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/2025 Projects/updatedecopros/resources/views/admin/cleaners/add-availability.blade.php ENDPATH**/ ?>

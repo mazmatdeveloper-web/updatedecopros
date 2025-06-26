@@ -13,7 +13,7 @@ class Appointment extends Model
         'start_time',
         'end_time',
         'beds_area_sqft_id',
-        'baths_area_sqft_id',
+        'no_of_baths',
         'service_id',
         'addon_ids',
         'discount_label',
@@ -21,7 +21,8 @@ class Appointment extends Model
         'total_price',
         'status',
         'address',
-        'additional_notes'
+        'additional_notes',
+        'reminder_sent'
         ];
     public function cleaner()
     {
@@ -34,5 +35,9 @@ class Appointment extends Model
     public function customer()
     {
         return $this->belongsTo(User::class);
+    }
+    public function bedsArea()
+    {
+        return $this->belongsTo(BedAreaSqft::class, 'beds_area_sqft_id');
     }
 }

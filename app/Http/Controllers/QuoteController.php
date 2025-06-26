@@ -121,8 +121,8 @@ class QuoteController extends Controller
         $endTime = Carbon::parse($end);
     
         while ($startTime->lt($endTime)) {
-            $slotStart = $startTime->format('h:i');
-            $slotEnd = $startTime->copy()->addMinutes($interval)->format('h:i');
+            $slotStart = $startTime->format('H:i');
+            $slotEnd = $startTime->copy()->addMinutes($interval)->format('H:i');
     
             if ($startTime->copy()->addMinutes($interval)->lte($endTime)) {
                 $slots[] = $slotStart . ' - ' . $slotEnd;
@@ -147,41 +147,37 @@ class QuoteController extends Controller
         foreach ($cleaners as $cleaner) {
             $basePrice = 0;
     
-            // Parse sqft range
+            
             [$minSqft, $maxSqft] = explode('-', str_replace(' ', '', $filters['area']));
     
-            // Get bed price (or 0 if not found)
+           
             $bedPriceModel = $cleaner->bed_area_sqfts
-                ->where('beds', $filters['beds'])
-                ->first(function ($item) use ($minSqft, $maxSqft) {
-                    return $item->no_of_sqft >= $minSqft && $item->no_of_sqft <= $maxSqft;
-                });
+            ->where('beds', $filters['beds'])
+            ->first(function ($item) use ($minSqft, $maxSqft) {
+                return $item->no_of_sqft >= $minSqft && $item->no_of_sqft <= $maxSqft;
+            });
             $bedPrice = $bedPriceModel->price ?? 0;
-    
-            // Get bath price (or 0 if not found)
-            $bathPriceModel = $cleaner->bath_area_sqfts
-                ->where('baths', $filters['baths'])
-                ->first(function ($item) use ($minSqft, $maxSqft) {
-                    return $item->no_of_sqft >= $minSqft && $item->no_of_sqft <= $maxSqft;
-                });
-            $bathPrice = $bathPriceModel->price ?? 0;
-    
-            // Get service price (or 0 if not found)
+
+           
             $servicePriceModel = $cleaner->service
-                ->where('service_name', $filters['service_type'])
-                ->first();
+            ->where('service_name', $filters['service_type'])
+            ->first();
             $servicePrice = $servicePriceModel->price ?? 0;
-    
-            // Pet charge
-            // $petCharge = ($filters['pets'] === 'yes_pets') ? 10 : 0;
-                
+
+            $bathroomPriceModel = $cleaner->bath_area_sqfts->first();
+            $perBathPrice = $bathroomPriceModel->price ?? 0;
+            $bathroomCount = (int) ($filters['baths'] ?? 0);
+            $totalBathPrice = $perBathPrice * $bathroomCount;
+
+            
             $selectedAddonIds = $filters['addons'] ?? [];
             $addons = Addon::whereIn('id', $selectedAddonIds)->get();
             $addonTotalPrice = $addons->sum('price');
-            // Total base price
-            $basePrice = $bedPrice + $bathPrice + $servicePrice + $addonTotalPrice;;
-    
-            // Discount logic
+
+            
+            $basePrice = $bedPrice + $servicePrice + $addonTotalPrice + $totalBathPrice;
+
+            
             $discounts = [
                 'one_time' => 0,
                 'monthly' => 0.10,
@@ -223,7 +219,7 @@ class QuoteController extends Controller
         $cleaner = Cleaner::with(['bed_area_sqfts', 'bath_area_sqfts', 'service'])
         ->findOrFail($cleanerId);
 
-        // Get bed price
+        
         $bedPriceModel = $cleaner->bed_area_sqfts
             ->where('beds', $beds)
             ->where('no_of_sqft', $area)
@@ -231,13 +227,7 @@ class QuoteController extends Controller
         $bedPrice = $bedPriceModel->price ?? 0;
         $area_sqft = $bedPriceModel->no_of_sqft ?? 'N/A';
 
-        // Get bath price
-        $bathPriceModel = $cleaner->bath_area_sqfts
-            ->where('baths', $baths)
-            ->first();
-        $bathPrice = $bathPriceModel->price ?? 0;
-
-        // Get service price
+        
         $servicePriceModel = $cleaner->service
             ->where('service_name', $service)
             ->first();
@@ -245,14 +235,14 @@ class QuoteController extends Controller
 
         $selectedAddons = Addon::whereIn('id', $addons)->get();
 
-        // Optional: Calculate addon total
+       
         $addonTotal = $selectedAddons->sum('price');
 
-        // Optional pet fee
+        
         $petCharge = ($pets === 'yes_pets') ? 10 : 0;
 
         // Total price
-        $totalPrice = $bedPrice + $bathPrice + $servicePrice + $addonTotal;
+        $totalPrice = $bedPrice + $servicePrice + $addonTotal;
 
         $discounts = [
             'one_time' => 0,
@@ -281,15 +271,13 @@ class QuoteController extends Controller
             'slot',
             'selectedDate',
             'beds',
-            'bedPriceModel',
-            'bathPriceModel',
+            'bedPriceModel',        
             'servicePriceModel',
             'baths',
             'area_sqft',
             'service',
             'pets',
             'bedPrice',
-            'bathPrice',
             'servicePrice',
             'totalPrice',
             'oneTimePrice',
@@ -300,7 +288,7 @@ class QuoteController extends Controller
         ));
         
             
-        }
+    }
     
  
 

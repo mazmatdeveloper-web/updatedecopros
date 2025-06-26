@@ -15,7 +15,15 @@
                     <h5 class="card-title mb-2">
                         <?php echo e($appointment['service_name']); ?>    
                     </h5>
-                    <span class='badge bg-info'><?php echo e($appointment['status']); ?></span>
+                    <?php if($appointment['status'] == 'pending'): ?>
+                                <span class="badge bg-info"><?php echo e(ucfirst($appointment['status'])); ?></span>
+                                <?php elseif($appointment['status'] == 'confirmed'): ?>
+                                <span class="badge bg-warning"><?php echo e(ucfirst($appointment['status'])); ?></span>
+                                <?php elseif($appointment['status'] == 'cancelled'): ?>
+                                <span class="badge bg-danger"><?php echo e(ucfirst($appointment['status'])); ?></span>
+                                <?php elseif($appointment['status'] == 'completed'): ?>
+                                <span class="badge bg-success"><?php echo e(ucfirst($appointment['status'])); ?></span>
+                                <?php endif; ?>
                 </div>   
                     <p class="mb-1"><strong>Date:</strong> <?php echo e($appointment['date']); ?></p>
                     <p class="mb-1"><strong>Time:</strong> <?php echo e($appointment['time']); ?></p>
@@ -54,6 +62,12 @@
                         <?php endif; ?>
                         <p><strong>Total Price:</strong> $<?php echo e($appointment['total_price']); ?></p>
                         <p class="text-muted"><small>Booked at: <?php echo e($appointment['booked_at']); ?></small></p>
+                        <a href="<?php echo e(route('edit.customer.appointment', $appointment['id'])); ?>">
+                                    <button
+                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle edit-option-btn">
+                                    <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                    </button>
+                                </a>
                     </div>
                 </div>
             </div>

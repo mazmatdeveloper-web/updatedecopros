@@ -6,6 +6,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\Zipcode;
 use App\Models\Addon;
+use App\Models\Cleaner;
+use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Service;
 
@@ -13,7 +15,16 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        return view('admin.dashboard.index');
+        $totalCleaner  = Cleaner::count();
+        $Totalappointments = Appointment::count();
+        $totalRevenue  = Appointment::sum('total_price');
+        $pendingCount = Appointment::where('status', 'pending')->count();
+        $toalcustomer = User::where('role', 'customer')->count();
+         $appointments = Appointment::where('created_at', '>=', now()->subDays(7))
+        ->orderByDesc('appointment_date')
+        ->get();
+
+        return view('admin.dashboard.index' , compact('totalCleaner','Totalappointments','totalRevenue','pendingCount','toalcustomer','appointments'));
     }
 
     public function zipcode()

@@ -9,6 +9,8 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\API\APIController;
+use App\Http\Controllers\StripeController;
 
 Route::get('/', function () {
     return view('home');
@@ -67,6 +69,7 @@ Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zip
 
 Route::get('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
 Route::post('calculate-prices', [QuoteController::class, 'calculatePrices'])->name('calculate.prices');
+Route::post('check-cleaner-service',[CleanerController::class, 'check_service'])->name('check.cleaner.service');
 Route::get('checkout', [QuoteController::class, 'quote_checkout'])->name('quote.checkout');
 Route::get('thank-you',[AppointmentController::class,'thank_you'])->name('quote.thankyou');
 
@@ -78,6 +81,14 @@ Route::post('insert-bath-options',[FiltersController::class,'insert_bath_options
 Route::post('insert-bed-area-sqft-options',[FiltersController::class,'insert_bed_area_sqft_options'])->name('insert.bed.areasqft.options');
 Route::post('insert-bath-area-sqft-options',[FiltersController::class,'insert_bath_area_sqft_options'])->name('insert.bath.areasqft.options');
 Route::post('insert-service',[FiltersController::class,'insert_service'])->name('insert.service');
+
+// Update Bedroom Sqft Option
+Route::post('/bed-area-sqft/update/{id}', [FiltersController::class, 'update_bed_area_sqft_options'])->name('update.bed.areasqft.options');
+Route::delete('/bed-area-sqft/delete/{id}', [FiltersController::class, 'delete_bedrooms'])->name('delete.bed.areasqft.options');
+Route::post('/bathroom-price/update/{id}', [FiltersController::class, 'update_bathroom_price'])->name('update.bathroom.price');
+Route::post('/services/update/{id}', [FiltersController::class, 'update_service'])->name('update.service');
+Route::delete('/service/delete/{id}', [FiltersController::class, 'delete_service'])->name('delete.service');
+
 
 // Cleaner Profile
 Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
@@ -94,7 +105,10 @@ Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.
 Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');
 
 Route::get('appointments',[AdminController::class,'all_appointments'])->name('appointments');
-
+Route::get('/edit/appointment/{id}', [AppointmentController::class , 'edit_appointment'])->name('edit.appointment');
+Route::get('/admin/cleaner-slots', [AppointmentController::class, 'getCleanerSlots'])->name('admin.get.cleaner.slots');
+Route::delete('/appointments/{id}', [AppointmentController::class, 'delete_appointment'])->name('delete.appointment');
+Route::put('update/availability/{id}',[AppointmentController::class , 'updateAvailability'])->name('update.availability');
 
 Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
 Route::post('/manual-register', [CustomerController::class, 'manual_register'])->name('manual.register');
@@ -107,8 +121,14 @@ Route::post('/recurring-availability/update', [AvailabilityController::class, 'r
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
     Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');
+    Route::get('/edit/appointment/{id}', [AppointmentController::class , 'edit_customer_appointment'])->name('edit.customer.appointment');
+    Route::put('update/customer/appointment/{id}',[AppointmentController::class , 'update_customer_appointment'])->name('update.customer.appoinmtent');
+
 });
 
 Route::get('updated',function(){
     return view('frontend.updated');
 });
+
+Route::get('/payment', [StripeController::class, 'showForm']);
+Route::post('/payment', [AppointmentController::class, 'book_appointment'])->name('book.appointment');

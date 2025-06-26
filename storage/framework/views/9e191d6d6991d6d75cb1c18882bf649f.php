@@ -1,12 +1,7 @@
 <?php $__env->startSection('content'); ?>
-
-<!-- <aside class='quote-sidebar'>
-  
-
-            
-            
-</aside> -->
-
+<div class="error-div" style='display:none;'>
+    <p class='mb-0' id='serviceErrorMessage'></p>
+</div>
 <div class="main-content">
     <div class="container-fluid">
    
@@ -14,97 +9,14 @@
         
             <div class="col-md-9 pt-4 pb-5">
 
-            <h6>7 House Cleaners<br>Serving <?php echo e($quoteData['address']); ?></h6>
 
-            
-<!-- <div id="filters-form-div" class="mt-2">
     <form action="" class='filters-form'>
-        <?php echo csrf_field(); ?>
-        
-        <div class="field-group mb-0">
-            <input type="hidden" name="address" value="<?php echo e($quoteData['address']); ?>" class='address_form_field form_field' id="address_field">
-        </div>
-        <div class="field-group">
-        
-            <button type='button' class='pill-btn' data-bs-toggle="modal" data-bs-target="#pill-modal">
-                <span class='no_of_beds'><?php echo e($quoteData['beds']); ?> BD</span>
-                <span class='seperator'>/</span>
-                <span class='no_of_bathrooms'><?php echo e($quoteData['baths']); ?> BR</span>
-                <span class='seperator'>/</span>
-                <span class='sq_ft'><?php echo e($quoteData['sq_ft']); ?> sqft</span>
-            </button>
-        </div>
-
-        <div class="field-group">
-            <label class='field_group_label'>Frequency</label><br>
-            <select name="service_duration" id="service_duration">
-                <option value="one_time" <?php echo e($quoteData['service_duration'] === 'one_time' ? 'selected' : ''); ?>>One-time Cleaning</option>
-                <option value="weekly" <?php echo e($quoteData['service_duration'] === 'weekly' ? 'selected' : ''); ?>>Weekly (20% off)</option>
-                <option value="biweekly" <?php echo e($quoteData['service_duration'] === 'biweekly' ? 'selected' : ''); ?>>Biweekly (15% off)</option>
-                <option value="monthly"<?php echo e($quoteData['service_duration'] === 'monthly' ? 'selected' : ''); ?> >Monthly (10% off)</option>
-            </select>
-        </div>
-        <div class="recurring-message my-3">
-            <div class="recurring-title d-flex justify-content-between align-items-center">
-                <h4>Make it recurring?</h4>
-                <span>Up to 20% off</span>
-            </div>
-            <p>Providers offer up to 20% off</p>
-            <p>Consistent schedule, no contracts</p>
-            <p>Rate Increase Protection</p>
-        </div>
-
-        <div class="field-group service-select-box">
-            <label class='field_group_label'>Which service would you like?</label><br>
-            
-            <div class="label-div">
-            <input type="radio" name="service_type" data-price='50' id='standard_cleaning' class='service_type_form_field form_field' value="Standard Cleaning" <?php echo e($quoteData['service_type'] === 'Standard Cleaning' ? 'checked' : ''); ?>>
-            <label for="standard_cleaning">Standard Cleaning <br><span>Home hasn't been cleaned in a while</span></label><br>
-            </div>
-            
-            <div class="label-div">
-            <input type="radio" name="service_type" data-price='40' id='deep_cleaning' class='service_type_form_field form_field' <?php echo e($quoteData['service_type'] === 'Deep Cleaning' ? 'checked' : ''); ?> value="Deep Cleaning">
-            <label for="deep_cleaning">Deep Cleaning <br><span>Home was cleaned in the past few weeks</span></label><br>
-            
-            </div>
-            <div class="label-div">
-            <input type="radio" name="service_type" data-price='40' id='move_in_out_cleaning' class='service_type_form_field form_field' <?php echo e($quoteData['service_type'] === 'Move-in/Move-out Cleaning' ? 'checked' : ''); ?> value="Move-in/Move-out Cleaning" >
-            <label for="move_in_out_cleaning">Move-in/Move-out Cleaning <br><span>Home was cleaned in the past few weeks</span></label>
-       
-            </div>
-           
-        </div>
-        <div class="field-group">
-            <label class='field_group_label'>Do you have pets?</label><br>
-            <select name="pets" id="pets">
-                <option value="no_pets" <?php echo e($quoteData['pets'] === 'no_pets' ? 'selected' : ''); ?>>No Pets</option>
-                <option value="yes_pets" <?php echo e($quoteData['pets'] === 'yes_pets' ? 'selected' : ''); ?>>Yes, I have pets!</option>
-            </select>
-        </div>
-
-        <label class='field_group_label'>Available Options</label><br>
-
-        <div class="field-group options-field-group">
-        <?php $__currentLoopData = $addons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <div class="more-options">
-                <input type="checkbox" id="addon_<?php echo e($addon->id); ?>" name="addons[]" value="<?php echo e($addon->id); ?>">
-                <label for="addon_<?php echo e($addon->id); ?>"><?php echo e($addon->addon_name); ?></label><br>
-            </div>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-        </div>    
-        
-    </form>
-</div> -->
-
-
-<form action="" class='filters-form'>
         <?php echo csrf_field(); ?>
         <div class="form-group-field">
             <input type="hidden" name="address" value="<?php echo e($quoteData['address']); ?>" class='address_form_field form_field' id="address_field">
             <label class='field_group_label'>Dimensions</label><br>
             
-            <button type='button' class='pill-btn' data-bs-toggle="modal" data-bs-target="#pill-modal">
+            <button type='button' class='pill-btn w-100' data-bs-toggle="modal" data-bs-target="#pill-modal">
                 <span class='no_of_beds'><?php echo e($quoteData['beds']); ?> BD</span>
                 <span class='seperator'>/</span>
                 <span class='no_of_bathrooms'><?php echo e($quoteData['baths']); ?> BR</span>
@@ -155,27 +67,43 @@
         </div>
 
 </form>
+ 
 
 
                         
                <div class="date-div">
-               <form class="mb-4">
-                    <?php
-                        use Carbon\Carbon;
-                        $today = Carbon::today()->toDateString();
-                    ?>
-                    <input type="date" name="date" value="<?php echo e($selectedDate); ?>" class="form-control w-25 d-inline-block" id='dateInput' min="<?php echo e($today); ?>">
-                </form>
-                <h3 class="mb-3"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('F j')); ?></h3>
+              
+
+                <?php
+                    use Carbon\Carbon;
+                    $today = Carbon::today();
+                    $startOfWeek = $today->copy()->startOfWeek(Carbon::SUNDAY);
+                ?>
+
+                <div class="d-flex align-items-center my-3">
+                    <button id="prevDay" class="btn btn-light me-2">&larr;</button>
+
+                    <div id="weekDates" class="d-flex gap-2 flex-grow-1 overflow-auto">
+                        <!-- Week buttons will be rendered by JS -->
+                    </div>
+
+                    <button id="nextDay" class="btn btn-light ms-2">&rarr;</button>
+                </div>
+
+                <h3 class="mx-3" id="selectedDateDisplay"><?php echo e($today->format('F j')); ?></h3>
+
+                <input type="hidden" id="weekStartDate" value="<?php echo e($startOfWeek->toDateString()); ?>">
+                <input type="hidden" id="selectedDateInput" value="<?php echo e($today->toDateString()); ?>">
+
                </div>
     
-                <div id="cleanersContainer" class='row'>
-               <div class="row d-flex justify-content-center">
+            <div id="cleanersContainer">
+               <div class="row d-flex justify-content-center align-items-stretch">
                 
                 <?php $__currentLoopData = $cleaners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cleaner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 
                 <div class="col-md-5">
-                <div class="card mb-2 border-0" data-cleaner-id="<?php echo e($cleaner->id); ?>">
+                <div class="card mb-2 border-0 h-100" data-cleaner-id="<?php echo e($cleaner->id); ?>">
                             <div class="card-body mb-2">
                             <div class="cleaner-profile-box d-flex align-items-center justify-content-between">
                                 <div class="cleaner-name d-flex align-items-center gap-2">
@@ -197,7 +125,12 @@
                             </div>    
                                 <?php if(!empty($cleaner->available_slots)): ?>
                                     <?php $__currentLoopData = $cleaner->available_slots; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slot): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <span class='timeslotstext'><?php echo e($slot); ?></span>
+                                    <span class='timeslotstext' 
+                                        data-slot="<?php echo e($slot); ?>" 
+                                        data-cleaner-id="<?php echo e($cleaner->id); ?>">
+                                        <?php echo e($slot); ?>
+
+                                    </span>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 <?php else: ?>
                                     <p class='notavailabletext'>Not available</p>
@@ -217,7 +150,16 @@
         <div class="col-md-3 cart-col" style='height:100vh;'>
                 <h2 class='cart-col-title mb-4'>Summary</h2>
 
-               
+                <h3 class='summary-labels'>Address</h3>
+            
+                <div class="additional-services-div mb-4">
+                    <table class='additional-services-table w-100'>
+                    <tr>
+                        <td class='text-start'><?php echo e($quoteData['address']); ?></td>
+                    </tr> 
+                    </table>    
+                </div>
+
                 
                 <h3 class='summary-labels'>Dimensions</h3>
                 <div class="dimensions-div mb-4">
@@ -307,9 +249,9 @@
                             <option value="4" <?php echo e($quoteData['baths'] == '4' ? 'selected' : ''); ?>>4 BA</option>
                             <option value="4.5" <?php echo e($quoteData['baths'] == '4.5' ? 'selected' : ''); ?>>4.5 BA</option>
                             <option value="5" <?php echo e($quoteData['baths'] == '5' ? 'selected' : ''); ?>>5 BA</option>
-                            <option value="5.5" <?php echo e($quoteData['baths'] == '5.5' ? 'selected' : ''); ?>>5 BA</option>
-                            <option value="6" <?php echo e($quoteData['baths'] == '6' ? 'selected' : ''); ?>>5 BA</option>
-                            <option value="6.5" <?php echo e($quoteData['baths'] == '6.5' ? 'selected' : ''); ?>>5 BA</option>
+                            <option value="5.5" <?php echo e($quoteData['baths'] == '5.5' ? 'selected' : ''); ?>>5.5 BA</option>
+                            <option value="6" <?php echo e($quoteData['baths'] == '6' ? 'selected' : ''); ?>>6 BA</option>
+                            <option value="6.5" <?php echo e($quoteData['baths'] == '6.5' ? 'selected' : ''); ?>>6.5 BA</option>
                         </select>
                         <select name="no_of_sqft" id="no_of_sqft_select">
                             <option value="0 - 1000" <?php echo e($quoteData['sq_ft'] == '0 - 1000' ? 'selected' : ''); ?>>0 -1000 sqft</option>
@@ -332,6 +274,186 @@
         </div>
     </div>
 
+
+    <script>
+
+function updatePrices() {
+        let filters = {
+            beds: $('select[name="no_of_beds"]').val(),
+            baths: $('select[name="no_of_baths"]').val(),
+            area: $('select[name="no_of_sqft"]').val(),
+            pets: $('select[name="pets"]').val(),
+            service_duration: $('select[name="service_duration"]').val(),
+            service_type: $('#service_type').val(),
+            addons: $('input[name="addons[]"]:checked').map(function() {
+            return $(this).val();
+            }).get(),
+            _token: '<?php echo e(csrf_token()); ?>'
+        };
+        
+        $.ajax({
+            url: "<?php echo e(route('calculate.prices')); ?>",
+            method: 'POST',
+            data: filters,
+            success: function(response) {
+
+                response.forEach(function(item, index) {
+                    const card = $('.card[data-cleaner-id="' + item.cleaner_id + '"]');
+                    card.find('.price-value').text('$' + item.price);                
+    
+                    let addonNames = '';
+                    let addonPrices = '';
+
+                    let frequencyName;
+                    const discountMap = {
+                        0: 'One Time',
+                        0.10: 'Monthly (10% off)',
+                        0.15: 'Biweekly (15% off)',
+                        0.20: 'Weekly (20% off)'
+                    };
+
+                    if (Array.isArray(item.addons) && item.addons.length > 0) {
+                        item.addons.forEach(function(addon) {
+                            addonNames += addon.addon_name + '<br>';
+                            // addonPrices += `$${addon.price}<br>`;
+                        });
+
+                        $('#addon_name_summary').html(addonNames);
+                        $('#addon_price_summary').html(addonPrices);
+                    } else {
+                        $('#addon_name_summary').text('No Additional Services');
+                        // $('#addon_price_summary').text('$0');
+                    }
+
+                    if (item.discount === null) {
+                        card.find('.base_price').text('');
+                    } else {
+                        card.find('.base_price').text('$' + item.basePrice);
+                    }
+
+                    if (item.discount === null) {
+                        frequencyName = 'One Time';
+                    } else {
+                        frequencyName = discountMap[item.discount] ?? 'One Time';
+                    }
+                    $('.frequency_name_summary').text(frequencyName);
+
+                    // $('.onetime_frequency_price_summary').text('$' + item.basePrice);
+
+                });
+
+            },
+            error: function(xhr) {
+                console.error('Error fetching prices:', xhr.responseText);
+            }
+        });
+    }
+
+    function generateWeekButtons(startDateStr) {
+        const startDate = new Date(startDateStr);
+        const todayStr = new Date().toISOString().split('T')[0];
+        const selectedDate = $('#selectedDateInput').val();
+        let weekHtml = '';
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + i);
+            const dateStr = date.toISOString().split('T')[0];
+
+            const isSelected = dateStr === selectedDate;
+            const isToday = dateStr === todayStr;
+            const isPast = dateStr < todayStr;
+
+            weekHtml += `
+                <button type="button"
+                        class="date-button ${isSelected ? 'btn-selected' : 'btn-not-selected'} ${isToday ? 'today-button' : ''} ${isPast ? 'disabled' : ''}"
+                        data-date="${dateStr}"
+                        ${isPast ? 'disabled' : ''}>
+                    ${date.toLocaleDateString('en-US', { weekday: 'short' })}<br>
+                    ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </button>`;
+        }
+
+        $('#weekDates').html(weekHtml);
+    }
+
+    function updateSelectedDateDisplay(dateStr) {
+        const displayDate = new Date(dateStr);
+        const formatted = displayDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        $('#selectedDateDisplay').text(formatted);
+    }
+
+    function updateDateByOffset(offset) {
+        const current = new Date($('#selectedDateInput').val());
+        current.setDate(current.getDate() + offset);
+
+        const newDateStr = current.toISOString().split('T')[0];
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        if (newDateStr < todayStr) return; // prevent past selection
+
+        $('#selectedDateInput').val(newDateStr);
+        updateSelectedDateDisplay(newDateStr);
+
+        const currentWeekStart = new Date($('#weekStartDate').val());
+        const currentWeekEnd = new Date(currentWeekStart);
+        currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+
+        if (current < currentWeekStart || current > currentWeekEnd) {
+            const newWeekStart = new Date(current);
+            newWeekStart.setDate(newWeekStart.getDate() - newWeekStart.getDay()); // Sunday
+            const newStartStr = newWeekStart.toISOString().split('T')[0];
+            $('#weekStartDate').val(newStartStr);
+            generateWeekButtons(newStartStr);
+        } else {
+            generateWeekButtons($('#weekStartDate').val());
+        }
+
+        fetchData(newDateStr);
+    }
+
+    function fetchData(date) {
+        $.ajax({
+            url: $('#dateForm')?.attr('action') ?? '',
+            type: 'GET',
+            data: { date },
+            success: function (response) {
+                $('#cleanersContainer').html(response.html);
+                updatePrices();
+            },
+            error: function (xhr) {
+                console.error('Error:', xhr.responseText);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        const today = new Date();
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay()); // Set to Sunday
+        const weekStartStr = weekStart.toISOString().split('T')[0];
+
+        $('#weekStartDate').val(weekStartStr);
+        $('#selectedDateInput').val(today.toISOString().split('T')[0]);
+
+        generateWeekButtons(weekStartStr);
+        updateSelectedDateDisplay($('#selectedDateInput').val());
+        fetchData($('#selectedDateInput').val());
+
+        $(document).on('click', '.date-button', function () {
+            const selectedDate = $(this).data('date');
+            if (new Date(selectedDate) < new Date().setHours(0, 0, 0, 0)) return;
+
+            $('#selectedDateInput').val(selectedDate);
+            updateSelectedDateDisplay(selectedDate);
+            generateWeekButtons($('#weekStartDate').val());
+            fetchData(selectedDate);
+        });
+
+        $('#prevDay').on('click', () => updateDateByOffset(-1));
+        $('#nextDay').on('click', () => updateDateByOffset(1));
+    });
+</script>
 
 
 <script>
@@ -411,11 +533,41 @@
         let card = $(this).closest('.card');
         let selectedTimeslot = $(this).text();
         let cleanerId = card.find('.cleanerId').text();
+        let selectedService = $('#service_type').val();
+        let beds = $('#no_of_beds_select').val();
+        let baths = $('#no_of_baths_select').val();
+        let area = $('#no_of_sqft_select').val();
 
-        $('.continuebtn').show();
+        $.ajax({
+        url: "<?php echo e(route('check.cleaner.service')); ?>",
+        method: "POST",
+        data: {
+            _token: '<?php echo e(csrf_token()); ?>',
+            cleaner_id: cleanerId,
+            service_type: selectedService,
+            beds: beds,
+            baths: baths,
+            area: area
+        },
+        success: function(response) {
+            if (response.exists) {
+                $('.continuebtn').show();
+            } else {
+                let msg = "This cleaner doesn't meet your requirements.";
+                if (response.reason === 'service') msg = "Cleaner doesn't offer " + selectedService;
+                if (response.reason === 'beds') msg = "Cleaner doesn't support the selected number of Beds at "+  area + ".";
+                if (response.reason === 'baths') msg = "Cleaner doesn't support the selected number of Baths at "+  area + ".";
 
-        console.log(selectedTimeslot);
-        console.log(cleanerId);
+                $('#serviceErrorMessage').text(msg);
+                $('.error-div').show();
+                $('.continuebtn').hide();
+                setTimeout(() => $('.error-div').fadeOut(), 2000);
+            }
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+        }
+        });
 
         // store data globally or in hidden inputs
         $('input[name="selectedTimeSlot"]').val(selectedTimeslot);
@@ -441,79 +593,6 @@
             });
         });
 
-    function updatePrices() {
-        let filters = {
-            beds: $('select[name="no_of_beds"]').val(),
-            baths: $('select[name="no_of_baths"]').val(),
-            area: $('select[name="no_of_sqft"]').val(),
-            pets: $('select[name="pets"]').val(),
-            service_duration: $('select[name="service_duration"]').val(),
-            service_type: $('#service_type').val(),
-            addons: $('input[name="addons[]"]:checked').map(function() {
-            return $(this).val();
-            }).get(),
-            _token: '<?php echo e(csrf_token()); ?>'
-        };
-        
-        $.ajax({
-            url: "<?php echo e(route('calculate.prices')); ?>",
-            method: 'POST',
-            data: filters,
-            success: function(response) {
-
-                response.forEach(function(item, index) {
-                    const card = $('.card[data-cleaner-id="' + item.cleaner_id + '"]');
-                    card.find('.price-value').text('$' + item.price);                
-                    console.log('Cleaner:', item.cleaner_name, 'Response Index:', index);
-
-                    let addonNames = '';
-                    let addonPrices = '';
-
-                    let frequencyName;
-                    const discountMap = {
-                        0: 'One Time',
-                        0.10: 'Monthly (10% off)',
-                        0.15: 'Biweekly (15% off)',
-                        0.20: 'Weekly (20% off)'
-                    };
-
-                    if (Array.isArray(item.addons) && item.addons.length > 0) {
-                        item.addons.forEach(function(addon) {
-                            addonNames += addon.addon_name + '<br>';
-                            // addonPrices += `$${addon.price}<br>`;
-                        });
-
-                        $('#addon_name_summary').html(addonNames);
-                        $('#addon_price_summary').html(addonPrices);
-                    } else {
-                        $('#addon_name_summary').text('No Additional Services');
-                        // $('#addon_price_summary').text('$0');
-                    }
-
-                    if (item.discount === null) {
-                        card.find('.base_price').text('');
-                    } else {
-                        card.find('.base_price').text('$' + item.basePrice);
-                    }
-
-                    if (item.discount === null) {
-                        frequencyName = 'One Time';
-                    } else {
-                        frequencyName = discountMap[item.discount] ?? 'One Time';
-                    }
-                    $('.frequency_name_summary').text(frequencyName);
-
-                    // $('.onetime_frequency_price_summary').text('$' + item.basePrice);
-
-                });
-
-            },
-            error: function(xhr) {
-                console.error('Error fetching prices:', xhr.responseText);
-            }
-        });
-    }
-
     // Trigger price update on filter change
     $('select[name="no_of_beds"], select[name="no_of_baths"], select[name="no_of_sqft"], select[name="pets"], select[name="service_duration"], select[name="service_type"], input[name="addons[]"]').on('change', updatePrices);
 
@@ -534,9 +613,8 @@
     // $('#cleanersContainer').on('click', '.continuebtn', function() {
      $('.continuebtn').on('click', function() {
 
-        let dateInput = $('#dateInput').val();
+        let dateInput = $('#selectedDateInput').val();
         let cleanerId = $('#selectedCleanerId').val();
-        console.log(cleanerId);
         let selectedslot = $('#selectedTimeSlot').val();
         let beds = $('#no_of_beds_select').val();
         let baths = $('#no_of_baths_select').val();

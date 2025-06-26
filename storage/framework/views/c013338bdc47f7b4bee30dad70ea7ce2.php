@@ -6,6 +6,12 @@
 
 <!-- new code --> 
 <div class="container my-5">
+<?php if(session('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo e(session('error')); ?>
+
+    </div>
+<?php endif; ?>
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <div class="d-flex summary-wrapper row-cols-md-2 flex-md-row flex-column">
@@ -22,7 +28,7 @@
                         </div>
                         <div class="cleaner-name-box">
                             <h4><?php echo e($cleaner->name); ?></h4>
-                            <p>House Cleaning</p>
+                            <p><?php echo e($service); ?></p>
                         </div>
                     </div>
                     
@@ -56,8 +62,9 @@
                 <?php endif; ?>
             </div>
 
-            <h5 class="mt-4 mb-3">Additional Services</h5>
+           
             <?php if($selectedAddons->isNotEmpty()): ?>
+            <h5 class="mt-4 mb-3">Additional Services</h5>
                 <ul class="additional-list p-0">
                 <?php if($selectedAddons->isNotEmpty()): ?>
                     <?php $__currentLoopData = $selectedAddons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $addon): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -107,12 +114,12 @@
 
             <?php if(auth()->guard()->check()): ?>
                         <?php if(Auth::user()->role !== 'admin'): ?>
-                        <form action="<?php echo e(route('book.appointment')); ?>" method='POST'>
+                        <form action="<?php echo e(route('book.appointment')); ?>" method='POST' id='payment-form'>
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name='cleaner_id' value='<?php echo e($cleaner->id); ?>'>
                             <input type="hidden" name='customer_id' value='<?php echo e(Auth::user()->id); ?>'>
                             <input type="hidden" name='beds_area_sqft_id' value='<?php echo e($bedPriceModel->id ?? ""); ?>'>
-                            <input type="hidden" name='baths_area_sqft_id' value='<?php echo e($bathPriceModel->id ?? ""); ?>'>
+                            <input type="hidden" name='no_of_baths' value='<?php echo e($baths ?? 0); ?>'>
                             <input type="hidden" name='service_id' value='<?php echo e($servicePriceModel->id ?? ""); ?>'>
                             <input type="hidden" name='discount_label' value='<?php echo e($frequency); ?>'>
                             <input type="hidden" name='discount_price' value='<?php echo e(number_format($discountAmounts[$frequency], 2)); ?>'>
@@ -136,7 +143,15 @@
                             <label class='mt-2' for="additional_notes">Additional Notes</label>
                             <textarea name="additional_notes" class='form-control bg-white text-dark' placeholder='Enter Notes for cleaner' id="additional_notes" cols="30" rows="5"></textarea>
                            
-                            <button class='continuebtn' type='submit'>Continue</button>
+                            
+                            <div class="mt-3">
+                                <label>Card Details</label>
+                                <div id="card-element" class="form-control p-2"></div>
+                            </div>
+
+                            <input type="hidden" name="stripeToken" id="stripeToken">
+
+                            <button class='continuebtn' type='submit' id="pay-button">Book Appointment</button>
                         </form>
                             
                         <?php endif; ?>
@@ -230,5 +245,30 @@
         }
     }
 </script>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    const stripe = Stripe( "<?php echo e(env('STRIPE_KEY')); ?>");
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    const form = document.getElementById('payment-form');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const { token, error } = await stripe.createToken(card);
+
+        if (error) {
+            alert(error.message);
+        } else {
+            document.getElementById('stripeToken').value = token.id;
+            form.submit();
+        }
+    });
+</script>
+
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/2025 Projects/updatedecopros/resources/views/frontend/quote-checkout.blade.php ENDPATH**/ ?>

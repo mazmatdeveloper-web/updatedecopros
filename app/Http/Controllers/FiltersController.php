@@ -23,8 +23,7 @@ class FiltersController extends Controller
     {
         $request->validate([
             'cleaner_id' => 'required|exists:cleaners,id',
-            'from' => 'required|string|max:255',
-            'to' => 'required|string|max:255',
+            'no_of_sqft' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'beds' => 'required|numeric|min:1',
             
@@ -32,7 +31,7 @@ class FiltersController extends Controller
     
         BedAreaSqft::create([
             'cleaner_id' => $request->cleaner_id,
-            'no_of_sqft' => $request->from." - ".$request->to,
+            'no_of_sqft' => $request->no_of_sqft,
             'price' => $request->price,
             'beds' => $request->beds,
         ]);
@@ -48,26 +47,34 @@ class FiltersController extends Controller
     {
         $request->validate([
             'cleaner_id' => 'required|exists:cleaners,id',
-            'from' => 'required|string|max:255',
-            'to' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'baths' => 'required|numeric|min:1',
-            
         ]);
+    
+        // Check if a bathroom price already exists for this cleaner
+        $exists = BathAreaSqft::where('cleaner_id', $request->cleaner_id)->exists();
+    
+        if ($exists) {
+            Alert::toast('Bathroom price already set for this cleaner!', 'error')
+                ->position('top-end')
+                ->timerProgressBar()
+                ->autoClose(5000);
+            return redirect()->back();
+        }
     
         BathAreaSqft::create([
             'cleaner_id' => $request->cleaner_id,
-            'no_of_sqft' => $request->from." - ".$request->to,
             'price' => $request->price,
-            'baths' => $request->baths,
+            'baths' => 1, // static value as per your current setup
         ]);
-        
-        Alert::toast('Bedrooms Area Sqft Options Added Successfully!', 'success')
-        ->position('top-end')
-        ->timerProgressBar()
-        ->autoClose(5000);
+    
+        Alert::toast('Bathroom Price Added Successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(5000);
+    
         return redirect()->back();
     }
+    
 
     public function insert_service(Request $request)
     {
@@ -89,4 +96,94 @@ class FiltersController extends Controller
         ->autoClose(500000);
         return redirect()->back();
     }
+
+    // update functions for filters
+
+    public function update_bed_area_sqft_options(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:beds_area_sqfts,id',
+            'edit_no_of_sqft' => 'required',
+            'beds' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $bedroom = BedAreaSqft::findOrFail($request->id);
+        $bedroom->update([
+            'no_of_sqft' => $request->edit_no_of_sqft,
+            'beds' => $request->beds,
+            'price' => $request->price,
+        ]);
+
+        Alert::toast('Bedroom Price Updated!', 'success')->autoClose(5000);
+        return redirect()->back();
+    }
+
+    public function delete_bedrooms($id)
+    {
+        $bedroom = BedAreaSqft::findOrFail($id);
+        $bedroom->delete();
+
+        Alert::toast('Bedroom pricing deleted successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(3000);
+
+        return redirect()->back();
+    }
+
+    public function update_bathroom_price(Request $request, $id)
+    {
+        $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $bathroom = BathAreaSqft::findOrFail($id);
+        $bathroom->update([
+            'price' => $request->price,
+        ]);
+
+        Alert::toast('Bathroom price updated successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(2000);
+
+        return redirect()->back();
+    }
+    
+
+    public function update_service(Request $request, $id)
+    {
+        $request->validate([
+            'service_name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $service = Service::findOrFail($id);
+        $service->update([
+            'service_name' => $request->service_name,
+            'price' => $request->price,
+        ]);
+
+        Alert::toast('Service updated successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(3000);
+
+        return redirect()->back();
+    }
+    
+    public function delete_service($id)
+    {
+        $service = Service::findOrFail($id);
+        $service->delete();
+
+        Alert::toast('Service deleted successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(3000);
+
+        return redirect()->back();
+    }
+
 }

@@ -75,8 +75,5 @@
         border-color: #c3e6cb;
         color: #155724;
     }
-    a:hover {
-        text-decoration: underline;
-        color: #40D002 !important;
-    }
+
 </style>
