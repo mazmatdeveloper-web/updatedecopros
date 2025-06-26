@@ -67,7 +67,7 @@
                         <input type="hidden" name='beds' class='no_of_beds'>
                         <input type="hidden" name='baths' class='no_of_baths'>
                         <input type="hidden" name='sq_ft' class='sq_ft'>
-                    </div>
+                    </div>  
                     <div class="field-group">
                         <label class='field_group_label'>Which service would you like?</label><br>
                         
