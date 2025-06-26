@@ -1,0 +1,101 @@
+@extends('customer.layouts.app')
+
+@section('customer_content')
+
+
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('update.customer.appoinmtent', $appointments->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <input type="hidden" name="appointment_id" value="{{ $appointments->id ?? '' }}">
+                            <!-- Service Name -->
+                                <div class="mb-3">
+                                    <label for="service_name" class="form-label fw-semibold">Service Name</label>
+                                    <input type="text" class="form-control" id="service_name" name="service_name"
+                                        value="{{ old('service_name', $appointments->service->service_name ?? '') }}" readonly>
+                                        <input type="hidden" name='cleaner' id='cleaner_id' value='{{ $appointments->cleaner_id }}'>
+                                        <input type="hidden" name="appointment_id" value="{{ $appointments->id ?? '' }}">
+                                </div>
+
+                                <!-- Date -->
+                                <div class="mb-3">
+                                    <label for="appointment_date" class="form-label fw-semibold">Appointment Date <span class='badge bg-success'>{{ $appointments->appointment_date }}</span></label>
+                                    <input type="date" class="form-control" id="appointment_date" name="appointment_date"
+                                        value="{{ old('appointment_date', $appointments->appointment_date ?? '') }}">
+                                </div>
+
+                                <!-- Time Slot -->
+                                <div class="mb-3">
+                                    <label for="start_time" class="form-label fw-semibold">Time Slot <span class='badge bg-success'>{{$appointments->start_time}} - {{$appointments->end_time}}</span></label>
+                                    <select class="form-select" id="start_time" name="start_time">
+                                        <option value="">Select a time</option>
+                                        <option value="{{ \Carbon\Carbon::parse($appointments->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointments->end_time)->format('H:i')  }}" selected>{{ \Carbon\Carbon::parse($appointments->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointments->end_time)->format('H:i')  }}</option>
+                                        <!-- Time slots will be populated via JS -->
+                                    </select>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="mb-3">
+                                    <label for="price" class="form-label fw-semibold">Total Price ($)</label>
+                                    <input type="number" step="0.01" class="form-control" id="price" name="price"
+                                        value="{{ old('price', $appointments->total_price ?? '') }}">
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="bi bi-save me-2"></i> Update Appointment
+                                    </button>
+                                </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.getElementById('appointment_date');
+        const cleaner_id = document.getElementById('cleaner_id');
+        const slotSelect = document.getElementById('start_time');
+
+        async function fetchSlots() {
+            const cleanerId = cleaner_id.value;
+            const date = dateInput.value;
+
+            if (!cleanerId || !date) {
+                slotSelect.innerHTML = '<option value="">Select a time</option>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/admin/cleaner-slots?cleaner_id=${cleanerId}&date=${date}`);
+                const data = await response.json();
+
+                slotSelect.innerHTML = '<option value="">Select a time</option>';
+                if (data.slots.length > 0) {
+                    data.slots.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot.start_time + ' - ' + slot.end_time;
+                        option.text = slot.start_time + ' - ' + slot.end_time;
+                        slotSelect.appendChild(option);
+                    });
+                } else {
+                    slotSelect.innerHTML = '<option value="">No available slots</option>';
+                }
+            } catch (error) {
+                console.error('Error fetching slots:', error);
+            }
+        }
+        dateInput.addEventListener('change', fetchSlots);
+    });
+</script>
+
+
+@endsection

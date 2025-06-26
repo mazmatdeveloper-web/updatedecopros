@@ -17,7 +17,15 @@
                     <h5 class="card-title mb-2">
                         {{ $appointment['service_name'] }}    
                     </h5>
-                    <span class='badge bg-info'>{{ $appointment['status'] }}</span>
+                    @if($appointment['status'] == 'pending')
+                                <span class="badge bg-info">{{ ucfirst($appointment['status']) }}</span>
+                                @elseif($appointment['status'] == 'confirmed')
+                                <span class="badge bg-warning">{{ ucfirst($appointment['status']) }}</span>
+                                @elseif($appointment['status'] == 'cancelled')
+                                <span class="badge bg-danger">{{ ucfirst($appointment['status']) }}</span>
+                                @elseif($appointment['status'] == 'completed')
+                                <span class="badge bg-success">{{ ucfirst($appointment['status']) }}</span>
+                                @endif
                 </div>   
                     <p class="mb-1"><strong>Date:</strong> {{ $appointment['date'] }}</p>
                     <p class="mb-1"><strong>Time:</strong> {{ $appointment['time'] }}</p>
@@ -56,6 +64,12 @@
                         @endif
                         <p><strong>Total Price:</strong> ${{ $appointment['total_price'] }}</p>
                         <p class="text-muted"><small>Booked at: {{ $appointment['booked_at'] }}</small></p>
+                        <a href="{{ route('edit.customer.appointment', $appointment['id']) }}">
+                                    <button
+                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle edit-option-btn">
+                                    <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                    </button>
+                                </a>
                     </div>
                 </div>
             </div>

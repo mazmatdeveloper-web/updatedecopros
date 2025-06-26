@@ -6,7 +6,6 @@
         <div class="col-md-6">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-white border-0 pt-4">
-                    <h2 class="text-center text-uppercase font-weight-bold" style="color: #026839;">{{ __('Login') }}</h2>
                 </div>
 
                 <div class="card-body px-5">

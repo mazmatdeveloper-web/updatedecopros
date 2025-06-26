@@ -9,6 +9,8 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\API\APIController;
+use App\Http\Controllers\StripeController;
 
 Route::get('/', function () {
     return view('home');
@@ -103,7 +105,10 @@ Route::get('edit-addon/{id}',[AdminController::class,'edit_addon'])->name('edit.
 Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name('update.addon');
 
 Route::get('appointments',[AdminController::class,'all_appointments'])->name('appointments');
-
+Route::get('/edit/appointment/{id}', [AppointmentController::class , 'edit_appointment'])->name('edit.appointment');
+Route::get('/admin/cleaner-slots', [AppointmentController::class, 'getCleanerSlots'])->name('admin.get.cleaner.slots');
+Route::delete('/appointments/{id}', [AppointmentController::class, 'delete_appointment'])->name('delete.appointment');
+Route::put('update/availability/{id}',[AppointmentController::class , 'updateAvailability'])->name('update.availability');
 
 Route::post('/manual-login', [CustomerController::class, 'manual_login'])->name('manual.login');
 Route::post('/manual-register', [CustomerController::class, 'manual_register'])->name('manual.register');
@@ -116,8 +121,14 @@ Route::post('/recurring-availability/update', [AvailabilityController::class, 'r
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
     Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');
+    Route::get('/edit/appointment/{id}', [AppointmentController::class , 'edit_customer_appointment'])->name('edit.customer.appointment');
+    Route::put('update/customer/appointment/{id}',[AppointmentController::class , 'update_customer_appointment'])->name('update.customer.appoinmtent');
+
 });
 
 Route::get('updated',function(){
     return view('frontend.updated');
 });
+
+Route::get('/payment', [StripeController::class, 'showForm']);
+Route::post('/payment', [AppointmentController::class, 'book_appointment'])->name('book.appointment');

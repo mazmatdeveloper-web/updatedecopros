@@ -25,6 +25,7 @@ class CustomerController extends Controller
     
         $appointments->transform(function ($appointment) {
             return [
+                'id' => $appointment->id,
                 'service_name' => $appointment->service->service_name ?? 'N/A',
                 'status' => $appointment->status,
                 'cleaner_name' => $appointment->cleaner->name ?? 'N/A',
