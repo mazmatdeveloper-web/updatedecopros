@@ -10,6 +10,7 @@ use App\Models\Cleaner;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Service;
+use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
@@ -194,6 +195,79 @@ class AdminController extends Controller
         $appointments = $query->orderBy('appointment_date', 'desc')->paginate(2);
     
         return view('admin.appointments.index', compact('appointments'));
+    }
+
+
+    //customer functions
+
+    public function show_customers(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::where('role', 'customer')->latest();
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('admin.edit.customer', $row->id);
+                    // $deleteUrl = route('users.destroy', $row->id);
+                    $view = route('customer.single',$row->id);
+    
+                    return '
+                        <a href="' . $editUrl . '" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                        <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                        </a>
+                        <a href="' .$view. '" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                        </a>
+
+                    ';
+                })
+                ->rawColumns(['action']) // VERY IMPORTANT for rendering HTML
+                ->make(true);
+        }
+        return view('admin.customers.index');
+    }
+
+    public function update_customer(Request $request, $id)
+    {
+        $request->validate([
+        'name'=>'required|string',
+        'email'=>'required',
+        'phone'=>'required', 
+        ]);
+
+        $customer = User::findOrFail($id);
+
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->phone = $request->phone;
+    
+        $customer->save();
+
+        Alert::toast('Customer Updated Successfully!', 'success')
+        ->position('top-end')
+        ->timerProgressBar()
+        ->autoClose(500000);
+        return redirect()->back();
+
+    }
+
+    public function show_single_profile($id)
+    {
+        $customer = User::where('role', 'customer')->findOrFail($id);
+
+        $appointments = Appointment::with(['service', 'cleaner'])
+            ->where('customer_id', $customer->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.customers.single_customer', compact('customer','appointments')); 
+    }
+
+    public function edit_customer($id)
+    {
+        $customer = User::where('role', 'customer')->first();
+        return view('admin.customers.edit' , compact('customer'));
+
     }
     
 }

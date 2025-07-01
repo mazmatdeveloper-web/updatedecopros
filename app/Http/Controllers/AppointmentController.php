@@ -217,6 +217,7 @@ class AppointmentController extends Controller
             'appointment_date' => 'required|date',
             'start_time' => 'required|string',
             'address' => 'required',
+            'notes' => 'required',
             'price' => 'nullable|numeric',
         ]);
     
@@ -228,6 +229,7 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         $appointment->cleaner_id = $request->cleaner;
         $appointment->address = $request->address;
+        $appointment->additional_notes = $request->notes;
         $appointment->appointment_date = $request->appointment_date;
         $appointment->start_time = Carbon::createFromFormat('H:i', trim($startTime))->format('H:i:s');
         $appointment->end_time = Carbon::createFromFormat('H:i', trim($endTime))->format('H:i:s');
@@ -271,6 +273,8 @@ class AppointmentController extends Controller
         $request->validate([
             'cleaner' => 'required|exists:cleaners,id',
             'appointment_date' => 'required|date',
+            'address' => 'required',
+            'notes' => 'required',
             'start_time' => 'required|string',
         ]);
     
@@ -283,6 +287,8 @@ class AppointmentController extends Controller
         $appointment->appointment_date = $request->appointment_date;
         $appointment->start_time = Carbon::createFromFormat('H:i', trim($startTime))->format('H:i:s');
         $appointment->end_time = Carbon::createFromFormat('H:i', trim($endTime))->format('H:i:s');
+        $appointment->address = $request->address;
+        $appointment->additional_notes = $request->notes;
     
         $appointment->save();
 
