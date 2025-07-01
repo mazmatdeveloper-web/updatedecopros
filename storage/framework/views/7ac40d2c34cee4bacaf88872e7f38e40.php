@@ -1,11 +1,11 @@
 <?php $__env->startSection('admin_content'); ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNECwhx76acUzGrfxknooV5O9LJFJSyKA&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNECwhx76acUzGrfxknooV5O9LJFJSyKA&libraries=places"></script>
     
 
 <div class="container">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-7">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <form action="<?php echo e(route('update.availability', $appointments->id)); ?>" method="POST">
@@ -49,21 +49,23 @@
                                     <input type="hidden" id="cleaner_id" name="cleaner_id" value="<?php echo e($appointments->cleaner_id); ?>">
                                 </div>
 
-                                <!-- Date -->
-                                <div class="mb-3">
+                                <div class="row">
+                                    <!-- Date -->
+                                <div class="mb-3 col-md-6">
                                     <label for="appointment_date" class="form-label fw-semibold">Appointment Date <span class='badge bg-success'><?php echo e($appointments->appointment_date); ?></span></label>
                                     <input type="date" class="form-control" id="appointment_date" name="appointment_date"
                                         value="<?php echo e(old('appointment_date', $appointments->appointment_date ?? '')); ?>">
                                 </div>
 
                                 <!-- Time Slot -->
-                                <div class="mb-3">
+                                <div class="mb-3 col-md-6">
                                     <label for="start_time" class="form-label fw-semibold">Time Slot <span class='badge bg-success'><?php echo e($appointments->start_time); ?> - <?php echo e($appointments->end_time); ?></span></label>
                                     <select class="form-select" id="start_time" name="start_time">
                                         <option value="">Select a time</option>
                                         <option value="<?php echo e(\Carbon\Carbon::parse($appointments->start_time)->format('H:i')); ?> - <?php echo e(\Carbon\Carbon::parse($appointments->end_time)->format('H:i')); ?>" selected><?php echo e(\Carbon\Carbon::parse($appointments->start_time)->format('H:i')); ?> - <?php echo e(\Carbon\Carbon::parse($appointments->end_time)->format('H:i')); ?></option>
                                         <!-- Time slots will be populated via JS -->
                                     </select>
+                                </div>
                                 </div>
 
                                 <!-- Address -->
@@ -73,6 +75,11 @@
                                     value='<?php echo e($appointments->address); ?>'>
                                     <input type="hidden" id="old_address" value="<?php echo e($appointments->address ?? ''); ?>">
                                     <div id="address-error" class="text-danger mt-1" style="display:none;"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label fw-semibold">Additional Notes</label>
+                                   <textarea name="notes" id="notes" class='form-control' cols="30" rows="3"><?php echo e($appointments->additional_notes); ?></textarea>
                                 </div>
 
                                 <!-- Price -->

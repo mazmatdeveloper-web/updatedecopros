@@ -116,6 +116,14 @@ Route::post('book-appointment',[AppointmentController::class, 'book_appointment'
 
 Route::post('/recurring-availability/update', [AvailabilityController::class, 'recurring_availability_update'])->name('recurring-availability.update');
 
+// customer routes for admin
+
+Route::get('customers',[AdminController::class,'show_customers'])->name('all.customers');
+Route::get('edit/customer/{id}', [AdminController::class , 'edit_customer'])->name('admin.edit.customer');
+Route::post('update/customer/{id}',[AdminController::class , 'update_customer'])->name('update.customer');
+Route::get('customer/{id}',[AdminController::class , 'show_single_profile'])->name('customer.single');
+
+
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
     Route::get('dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('my-appointments', [CustomerController::class, 'my_appointments'])->name('customer.myappointments');

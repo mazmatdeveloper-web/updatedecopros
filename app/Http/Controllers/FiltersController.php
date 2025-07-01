@@ -47,11 +47,13 @@ class FiltersController extends Controller
     {
         $request->validate([
             'cleaner_id' => 'required|exists:cleaners,id',
+            'noofbathroom'=> 'required|numeric',
             'price' => 'required|numeric|min:0',
         ]);
     
-        // Check if a bathroom price already exists for this cleaner
-        $exists = BathAreaSqft::where('cleaner_id', $request->cleaner_id)->exists();
+        $exists = BathAreaSqft::where('cleaner_id', $request->cleaner_id)
+                                ->where('baths', $request->noofbathroom)
+                                ->exists();
     
         if ($exists) {
             Alert::toast('Bathroom price already set for this cleaner!', 'error')
@@ -64,10 +66,10 @@ class FiltersController extends Controller
         BathAreaSqft::create([
             'cleaner_id' => $request->cleaner_id,
             'price' => $request->price,
-            'baths' => 1, // static value as per your current setup
+            'baths' => $request->noofbathroom,   
         ]);
     
-        Alert::toast('Bathroom Price Added Successfully!', 'success')
+        Alert::toast('Bathroom Added Successfully!', 'success')
             ->position('top-end')
             ->timerProgressBar()
             ->autoClose(5000);

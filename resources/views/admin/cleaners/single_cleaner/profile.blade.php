@@ -128,38 +128,66 @@
                             </div>
                         </div>
 
-                        <!-- Bathroom Area Sqft Tab -->
-                        <div class="tab-pane fade" id="batharea" role="tabpanel" aria-labelledby="bath-area-tab">
-                            <div class="row">
-                               
-                                <div class="col-md-12 text-end">
-                                    <button class="btn btn-primary open-modal" data-type="bathroom">Add Bathroom Sqft Option</button>
+                         <!-- Bathroom Area Sqft Tab -->
+                         <div class="tab-pane fade" id="batharea" role="tabpanel" aria-labelledby="bath-area-tab">
+                                <div class="row">
+                                
+                                    <div class="col-md-12 text-end">
+                                        <button class="btn btn-primary open-modal" data-type="bathroom">Add Bathroom Sqft Option</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
+
+                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="card">
-                                        <div class="card-body d-flex align-items-center justify-content-between">
-                                        @forelse ($cleaner->bath_area_sqfts as $index => $area)
-                                                    <p class='mb-0'>Bathroom price is set to: <strong>${{ number_format($area->price, 2) }}</strong></p> 
-                                                    <button
-                                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle edit-option-btn"
-                                                        data-id="{{ $area->id }}"
-                                                        data-type="bathroom"
-                                                        data-record='@json($area)'
-                                                    >
-                                                    <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-
-                                                    </button>  
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>No of bathrooms</th>
+                                                        <th>Price</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                 @forelse ($cleaner->bath_area_sqfts as $index => $area)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $area->baths }}</td>
+                                                            <td>${{ number_format($area->price, 2) }}</td>
+                                                            <td class='d-flex align-items-center gap-1'>
+                                                                <button
+                                                                    class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle edit-option-btn"
+                                                                    data-id="{{ $area->id }}"
+                                                                    data-type="bathroom"
+                                                                    data-record='@json($area)'
+                                                                >
+                                                                <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                                                </button>
+                                                                <form action="{{ route('delete.bed.areasqft.options', $area->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this bedroom option?');" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                                                        <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                                                    </button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
                                                     @empty
-                                                        Your did not set bathroom price
+                                                        <tr>
+                                                            <td colspan="5" class="text-center">No area sqft options available.</td>
+                                                        </tr>
                                                     @endforelse
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        
                         <!-- Services Tab -->
                         <div class="tab-pane fade" id="service" role="tabpanel" aria-labelledby="service-tab">
                             <div class="row">
@@ -357,6 +385,12 @@
                 <option value="6">6</option>
                 <option value="7">7</option>
             </select>
+          </div>
+
+          <!-- Bathroom -->
+          <div class="mb-3" id="bathroomGroup">
+            <label>No of bathrooms</label>
+            <input type="number" name="noofbathroom" class="form-control" placeholder="No of bathrooms">
           </div>
 
 
@@ -578,8 +612,8 @@ $(document).on('click', '.open-modal', function () {
   // Show relevant fields
   if (type === 'bedroom') {
     $('#sqftGroup, #bedGroup, #priceGroup').show();
-  } else if (type === 'bathroom') {
-    $('#priceGroup').show();
+  }  else if (type === 'bathroom') {
+    $('#priceGroup , #bathroomGroup').show();
   } else if (type === 'service') {
     $('#serviceGroup, #priceGroup').show();
   }
