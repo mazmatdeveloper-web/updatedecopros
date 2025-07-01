@@ -48,6 +48,12 @@
           <span>Appointments</span>
         </a>
       </li>
+      <li>
+        <a href="<?php echo e(route('all.customers')); ?>">
+        <iconify-icon icon="solar:user-linear" class="menu-icon"></iconify-icon>
+          <span>Customers</span>
+        </a>
+      </li>
     </ul>
   </div>
 

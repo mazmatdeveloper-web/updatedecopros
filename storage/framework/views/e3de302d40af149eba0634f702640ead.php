@@ -1,6 +1,7 @@
 <?php $__env->startSection('content'); ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNECwhx76acUzGrfxknooV5O9LJFJSyKA&libraries=places"></script>
+    
     <style>
         .pac-container {
             z-index: 1056 !important;
