@@ -8,11 +8,12 @@ use App\Models\Appointment;
 use App\Models\Addon;
 use App\Models\User;
 use App\Models\AvailableDate;
+use App\Models\Service;
 use App\Models\RecurringAvailability;
-use App\Models\Cleaner;
+use App\Models\employee;
 use App\Mail\AppointmentBookedMail;
-use App\Mail\CleanerBookingMail;
-use App\Mail\CleanerAppointmentUpdate;
+use App\Mail\employeeBookingMail;
+use App\Mail\EmployeeAppointmentUpdate;
 use App\Mail\AdminBookingMail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -29,19 +30,14 @@ class AppointmentController extends Controller
 
     public function book_appointment(Request $request)
     {
-
         $data = $request->validate([
-            'cleaner_id' => 'required|exists:users,id',
+            'employee_id' => 'required|exists:employees,id',
             'customer_id' => 'required|exists:users,id',
             'start_time' => 'required',
             'end_time' => 'required',
             'appointment_date' => 'required',
-            'beds_area_sqft_id' => 'nullable|exists:beds_area_sqfts,id',
-            'no_of_baths' => 'nullable',
-            'service_id' => 'nullable|exists:services,id',
-            'discount_label' => 'nullable|string|max:255',
-            'discount_price' => 'nullable|numeric',
-            'total_price' => 'required|numeric',
+            'service_id' => 'nullable|string',
+            'total_price' => 'required',
             'addon_ids' => 'nullable|string',
             'address' => 'nullable|string',
             'additional_notes' => 'nullable|string'
@@ -54,7 +50,7 @@ class AppointmentController extends Controller
             'appointment_date' => $data['appointment_date'],
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
-            'cleaner_id' => $data['cleaner_id'],
+            'employee_id' => $data['employee_id'],
             'customer_id' => $data['customer_id'],
         ])->first();
 
@@ -84,13 +80,9 @@ class AppointmentController extends Controller
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
             'appointment_date' => $data['appointment_date'],
-            'cleaner_id' => $data['cleaner_id'],
+            'employee_id' => $data['employee_id'],
             'customer_id' => $data['customer_id'],
-            'beds_area_sqft_id' => $data['beds_area_sqft_id'],
-            'no_of_baths' => $data['no_of_baths'],
-            'service_id' => $data['service_id'] ?? 14,
-            'discount_label' => $data['discount_label'],
-            'discount_price' => $data['discount_price'] ?? 0,
+            'service_id' => $data['service_id'],
             'total_price' => $data['total_price'],
             'addon_ids' => $data['addon_ids'],
             'status' => 'pending',
@@ -98,7 +90,7 @@ class AppointmentController extends Controller
             'additional_notes' => $data['additional_notes']
         ]);
 
-        $appointment->load(['cleaner', 'customer', 'service', 'bedsArea']);
+        $appointment->load(['employee', 'customer', 'service']);
 
         // Attach addons
         $addonIds = json_decode($appointment->addon_ids, true) ?? [];
@@ -107,27 +99,27 @@ class AppointmentController extends Controller
 
         // Send emails only once
         Mail::to($appointment->customer->email)->send(new AppointmentBookedMail($appointment));
-        Mail::to($appointment->cleaner->email)->send(new CleanerBookingMail($appointment));
+        Mail::to($appointment->employee->email)->send(new employeeBookingMail($appointment));
         Mail::to('admin@example.com')->send(new AdminBookingMail($appointment));
 
         return view('frontend.thankyou', compact('appointment'));
 
     }
 
-    public function getCleanerSlots(Request $request)
+    public function getemployeeSlots(Request $request)
     {
         $request->validate([
-            'cleaner_id' => 'required|exists:users,id',
+            'employee_id' => 'required|exists:employees,id',
             'date' => 'required|date'
         ]);
     
-        $cleanerId = $request->cleaner_id;
+        $employeeId = $request->employee_id;
         $date = Carbon::parse($request->date);
         $dayOfWeek = $date->format('l'); // e.g. 'Monday'
         $dateStr = $date->format('Y-m-d');
     
-        // Get all appointments for that cleaner on the selected date
-        $bookedAppointments = Appointment::where('cleaner_id', $cleanerId)
+        // Get all appointments for that employee on the selected date
+        $bookedAppointments = Appointment::where('employee_id', $employeeId)
             ->where('appointment_date', $dateStr)
             ->get(['start_time', 'end_time']);
     
@@ -156,7 +148,7 @@ class AppointmentController extends Controller
         $availableSlots = [];
     
         // 1. Try specific date availability
-        $availableDate = AvailableDate::where('cleaner_id', $cleanerId)
+        $availableDate = AvailableDate::where('employee_id', $employeeId)
             ->where('dates', $dateStr)
             ->where('is_disabled', 0)
             ->first();
@@ -170,7 +162,7 @@ class AppointmentController extends Controller
             }
         } else {
             // 2. Fallback to recurring availability
-            $recurring = RecurringAvailability::where('cleaner_id', $cleanerId)
+            $recurring = RecurringAvailability::where('employee_id', $employeeId)
                 ->where('day_of_week', $dayOfWeek)
                 ->where('is_active', 1)
                 ->get();
@@ -201,11 +193,14 @@ class AppointmentController extends Controller
 
     public function edit_appointment($id)
     {
-        $appointments = Appointment::findOrFail($id); 
-        $cleanerIds = Cleaner::distinct()->pluck('id')->toArray();
-        $cleaners = Cleaner::get();
-
-        return view('admin.appointments.edit', compact('appointments', 'cleaners'));
+        $appointment = Appointment::findOrFail($id); // Use singular name for clarity
+        $employees = Employee::all();
+        $services = Service::all(); // Get all available services
+    
+        // Decode selected service IDs
+        $selectedServiceIds = json_decode($appointment->service_id, true) ?? [];
+    
+        return view('admin.appointments.edit', compact('appointment', 'employees', 'services', 'selectedServiceIds'));
     }
 
 
@@ -213,12 +208,17 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,confirmed,completed,cancelled',
-            'cleaner' => 'required|exists:cleaners,id',
+            'employee' => 'required|exists:employees,id',
             'appointment_date' => 'required|date',
             'start_time' => 'required|string',
             'address' => 'required',
             'notes' => 'required',
             'price' => 'nullable|numeric',
+            'service_ids' => 'required|array',
+            'service_ids.*' => 'exists:services,id',
+            // If using addons too:
+            // 'addon_ids' => 'nullable|array',
+            // 'addon_ids.*' => 'exists:addons,id',
         ]);
     
         $appointment = Appointment::findOrFail($id);
@@ -227,7 +227,7 @@ class AppointmentController extends Controller
         [$startTime, $endTime] = explode(' - ', $request->start_time);
     
         $appointment->status = $request->status;
-        $appointment->cleaner_id = $request->cleaner;
+        $appointment->employee_id = $request->employee;
         $appointment->address = $request->address;
         $appointment->additional_notes = $request->notes;
         $appointment->appointment_date = $request->appointment_date;
@@ -235,18 +235,25 @@ class AppointmentController extends Controller
         $appointment->end_time = Carbon::createFromFormat('H:i', trim($endTime))->format('H:i:s');
         $appointment->total_price = $request->price;
     
+        // ✅ Store selected services as JSON
+        $appointment->service_id = json_encode($request->service_ids);
+    
+        // ✅ Optionally store addons too (if used)
+        // $appointment->addon_ids = json_encode($request->addon_ids ?? []);
+    
         $appointment->save();
-
+    
         Alert::toast('Appointment Updated successfully!', 'success')
-                ->position('top-end')
-                ->timerProgressBar()
-                ->autoClose(5000);
-        Mail::to($appointment->cleaner->email)->send(new CleanerAppointmentUpdate($appointment));
-
-            return redirect()->back();
-        
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(5000);
+    
+        // Notify employee
+        Mail::to($appointment->employee->email)->send(new EmployeeAppointmentUpdate($appointment));
+    
+        return redirect()->back();
     }
-
+    
     public function delete_appointment($id)
     {
 
@@ -263,15 +270,15 @@ class AppointmentController extends Controller
     public function edit_customer_appointment($id)
     {
         $appointments = Appointment::findOrFail($id); 
-        $cleanerIds = Cleaner::distinct()->pluck('id')->toArray();
-        $cleaners = Cleaner::get();
+        $employeeIds = employee::distinct()->pluck('id')->toArray();
+        $employees = employee::get();
 
-        return view('customer.appointments.edit', compact('appointments', 'cleaners'));   
+        return view('customer.appointments.edit', compact('appointments', 'employees'));   
     }
     public function update_customer_appointment(Request $request)
     {
         $request->validate([
-            'cleaner' => 'required|exists:cleaners,id',
+            'employee' => 'required|exists:employees,id',
             'appointment_date' => 'required|date',
             'address' => 'required',
             'notes' => 'required',
@@ -283,7 +290,7 @@ class AppointmentController extends Controller
         // Parse selected slot (e.g., "10:00 - 11:00")
         [$startTime, $endTime] = explode(' - ', $request->start_time);
     
-        $appointment->cleaner_id = $request->cleaner;
+        $appointment->employee_id = $request->employee;
         $appointment->appointment_date = $request->appointment_date;
         $appointment->start_time = Carbon::createFromFormat('H:i', trim($startTime))->format('H:i:s');
         $appointment->end_time = Carbon::createFromFormat('H:i', trim($endTime))->format('H:i:s');

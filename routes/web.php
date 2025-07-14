@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AvailabilityController;
-use App\Http\Controllers\CleanerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FiltersController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UpdatedController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\API\APIController;
 use App\Http\Controllers\StripeController;
@@ -24,13 +26,13 @@ Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 Route::get('/availability/create', [AvailabilityController::class, 'create'])->name('availability.create');
 Route::post('/availability/store', [AvailabilityController::class, 'store'])->name('availability.store');
 
-Route::get('/cleaners/{cleaner}', [CleanerController::class, 'show'])->name('cleaners.show');
+Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
 
-Route::post('/book-appointment', [CleanerController::class, 'bookAppointment'])->name('book.appointment');
+Route::post('/book-appointment', [EmployeeController::class, 'bookAppointment'])->name('book.appointment');
 
-Route::get('add-cleaner',[CleanerController::class,'add_cleaner'])->name('add.cleaner');
-Route::post('insert-cleaner', [CleanerController::class, 'insert_cleaner'])->name('insert.cleaner');
-Route::get('add-cleaner-availability',[CleanerController::class,'add_cleaner_availability'])->name('add.cleaner.availability');
+Route::get('add-employee',[EmployeeController::class,'add_employee'])->name('add.employee');
+Route::post('insert-employee', [EmployeeController::class, 'insert_employee'])->name('insert.employee');
+Route::get('add-employee-availability',[EmployeeController::class,'add_employee_availability'])->name('add.employee.availability');
 Route::get('add-zipcode',[AdminController::class,'zipcode'])->name('add.zipcode');
 Route::post('insert-zipcode',[AdminController::class,'insert_zipcode'])->name('insert.zipcode');
 Route::get('delete-zipcode/{id}',[AdminController::class,'delete_zipcode'])->name('delete.zipcode');
@@ -38,61 +40,43 @@ Route::get('edit-zipcode/{id}',[AdminController::class,'edit_zipcode'])->name('e
 Route::post('update-zipcode/{id}', [AdminController::class, 'update_zipcode'])->name('update.zipcode');
 Route::get('services',[AdminController::class,'show_service'])->name('all.services');
 
-Route::get('cleaners',[CleanerController::class,'show_cleaners'])->name('all.cleaners');
+Route::get('employees',[EmployeeController::class,'show_employees'])->name('all.employees');
 
-// Beds Sqft
+// Admin Employee Services
+Route::get('edit-service/{id}',[EmployeeController::class,'edit_service'])->name('edit.service');
+Route::post('/update-services/{id}', [EmployeeController::class, 'update_service'])->name('update.services');
+Route::delete('employees/{employee}/services/{service}', [EmployeeController::class, 'delete_service'])
+    ->name('employee.delete.service');
+Route::post('employees/attach-services', [EmployeeController::class, 'attach_services'])->name('employee.attach.services');
 
-Route::get('edit-beds/{id}',[CleanerController::class,'edit_beds'])->name('edit.beds');
-Route::post('/update-beds/{id}', [CleanerController::class, 'updateBeds'])->name('update.beds');
-Route::delete('/delete_beds/{id}',[CleanerController::class,'delete_beds'])->name('delete.beds');
-
-
-// Bathroom Sqft
-
-Route::get('edit-bathroom/{id}',[CleanerController::class,'edit_bathroom'])->name('edit.bathroom');
-Route::post('/update-baths/{id}', [CleanerController::class, 'updatebaths'])->name('update.bathroom');
-Route::delete('delete_baths/{id}',[CleanerController::class,'delete_baths'])->name('delete.baths');
-
-// Services
-Route::get('edit-service/{id}',[CleanerController::class,'edit_service'])->name('edit.service');
-Route::post('/update-services/{id}', [CleanerController::class, 'update_service'])->name('update.services');
-Route::delete('delete-services/{id}',[CleanerController::class,'delete_service'])->name('delete.service');
-
-// Cleaner Availible Dates
-Route::get('edit-availible-date/{id}',[CleanerController::class,'edit_cleaner_availible_dates'])->name('edit.availible.dates');
-Route::post('/update-availible/date/{id}', [CleanerController::class, 'updateAvailability'])->name('update.availinle.date');
+// employee Availible Dates
+Route::get('edit-availible-date/{id}',[EmployeeController::class,'edit_employee_availible_dates'])->name('edit.availible.dates');
+Route::post('/update-availible/date/{id}', [EmployeeController::class, 'updateAvailability'])->name('update.availinle.date');
 
 Route::get('quote', [QuoteController::class, 'quote_page'])->name('quote');
+
+Route::get('booking', [BookingController::class, 'booking'])->name('booking');
 Route::post('check-zipcode', [QuoteController::class, 'quote'])->name('check.zipcode');
 
-Route::get('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
+// Route::post('quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
+Route::match(['get', 'post'], '/quote-extended', [QuoteController::class, 'quote_extended'])->name('quote.extended');
 Route::post('calculate-prices', [QuoteController::class, 'calculatePrices'])->name('calculate.prices');
-Route::post('check-cleaner-service',[CleanerController::class, 'check_service'])->name('check.cleaner.service');
+Route::post('check-employee-service',[EmployeeController::class, 'check_service'])->name('check.employee.service');
 Route::get('checkout', [QuoteController::class, 'quote_checkout'])->name('quote.checkout');
 Route::get('thank-you',[AppointmentController::class,'thank_you'])->name('quote.thankyou');
 
 
-// Bed Routes
-Route::get('beds',[FiltersController::class,'show_beds'])->name('all.beds');
-Route::post('insert-bed-options',[FiltersController::class,'insert_bed_options'])->name('insert.bed.options');
-Route::post('insert-bath-options',[FiltersController::class,'insert_bath_options'])->name('insert.bath.options');
-Route::post('insert-bed-area-sqft-options',[FiltersController::class,'insert_bed_area_sqft_options'])->name('insert.bed.areasqft.options');
-Route::post('insert-bath-area-sqft-options',[FiltersController::class,'insert_bath_area_sqft_options'])->name('insert.bath.areasqft.options');
-Route::post('insert-service',[FiltersController::class,'insert_service'])->name('insert.service');
-
-// Update Bedroom Sqft Option
-Route::post('/bed-area-sqft/update/{id}', [FiltersController::class, 'update_bed_area_sqft_options'])->name('update.bed.areasqft.options');
-Route::delete('/bed-area-sqft/delete/{id}', [FiltersController::class, 'delete_bedrooms'])->name('delete.bed.areasqft.options');
-Route::post('/bathroom-price/update/{id}', [FiltersController::class, 'update_bathroom_price'])->name('update.bathroom.price');
-Route::post('/services/update/{id}', [FiltersController::class, 'update_service'])->name('update.service');
-Route::delete('/service/delete/{id}', [FiltersController::class, 'delete_service'])->name('delete.service');
+// Admin Service Module
+Route::get('services',[AdminController::class,'all_services'])->name('all.services');
+Route::post('insert-service',[AdminController::class,'insert_service'])->name('insert.service');
+Route::delete('delete-service/{id}',[AdminController::class,'delete_service'])->name('delete.service');
 
 
-// Cleaner Profile
-Route::get('cleaners/{id}/profile', [CleanerController::class, 'cleanerProfile'])->name('cleaners.profile');
-Route::get('cleaners/delete/{id}', [CleanerController::class, 'delete_cleaner'])->name('cleaners.delete');
-Route::get('cleaners/edit/{id}', [CleanerController::class, 'edit_cleaner'])->name('cleaners.edit');
-Route::post('cleaners/update', [CleanerController::class, 'update_cleaner'])->name('cleaners.update');
+// employee Profile
+Route::get('employees/{id}/profile', [EmployeeController::class, 'employeeProfile'])->name('employees.profile');
+Route::get('employees/delete/{id}', [EmployeeController::class, 'delete_employee'])->name('employees.delete');
+Route::get('employees/edit/{id}', [EmployeeController::class, 'edit_employee'])->name('employees.edit');
+Route::post('employees/update', [EmployeeController::class, 'update_employee'])->name('employees.update');
 
 // addons
 
@@ -104,7 +88,7 @@ Route::post('update-addon/{id}', [AdminController::class, 'update_addon'])->name
 
 Route::get('appointments',[AdminController::class,'all_appointments'])->name('appointments');
 Route::get('/edit/appointment/{id}', [AppointmentController::class , 'edit_appointment'])->name('edit.appointment');
-Route::get('/admin/cleaner-slots', [AppointmentController::class, 'getCleanerSlots'])->name('admin.get.cleaner.slots');
+Route::get('/admin/employee-slots', [AppointmentController::class, 'getemployeeslots'])->name('admin.get.employee.slots');
 Route::delete('/appointments/{id}', [AppointmentController::class, 'delete_appointment'])->name('delete.appointment');
 Route::put('update/availability/{id}',[AppointmentController::class , 'updateAvailability'])->name('update.availability');
 
@@ -138,3 +122,10 @@ Route::get('updated',function(){
 
 Route::get('/payment', [StripeController::class, 'showForm']);
 Route::post('/payment', [AppointmentController::class, 'book_appointment'])->name('book.appointment');
+
+
+
+// updated frontend
+
+Route::get('updated-booking',[UpdatedController::class, 'booking'])->name('updated.booking');
+Route::post('updated-quote-extended', [UpdatedController::class, 'booking_extended'])->name('updated.booking.extended');

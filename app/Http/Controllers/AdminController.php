@@ -6,7 +6,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use App\Models\Zipcode;
 use App\Models\Addon;
-use App\Models\Cleaner;
+use App\Models\Employee;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Service;
@@ -16,7 +16,7 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $totalCleaner  = Cleaner::count();
+        $totalEmployee  = Employee::count();
         $Totalappointments = Appointment::count();
         $totalRevenue  = Appointment::sum('total_price');
         $pendingCount = Appointment::where('status', 'pending')->count();
@@ -25,13 +25,19 @@ class AdminController extends Controller
         ->orderByDesc('appointment_date')
         ->get();
 
-        return view('admin.dashboard.index' , compact('totalCleaner','Totalappointments','totalRevenue','pendingCount','toalcustomer','appointments'));
+        return view('admin.dashboard.index' , compact('totalEmployee','Totalappointments','totalRevenue','pendingCount','toalcustomer','appointments'));
     }
 
     public function zipcode()
     {
         $zipcodes = Zipcode::latest()->get();
         return view('admin.zipcode.add-zipcode',compact('zipcodes'));
+    }
+
+    public function all_services()
+    {
+        $services = Service::latest()->get();
+        return view('admin.services.all-services',compact('services'));
     }
 
     public function insert_zipcode(Request $request)
@@ -98,21 +104,41 @@ class AdminController extends Controller
         $request->validate([
             'service_name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'description' => 'nullable',
+            'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+
         ]);
+
+        $serviceImagePath = null;
+        if ($request->hasFile('service_image')) {
+            $serviceImagePath = $request->file('service_image')->store('services', 'public');
+        }
 
         Service::create([
             'service_name' => $request->service_name,
             'price' => $request->price,
-            'description' => $request->description
+            'service_image' => $serviceImagePath
         ]);
 
         Alert::toast('Service Added Successfully!', 'success')
         ->position('top-end')
         ->timerProgressBar()
-        ->autoClose(500000);
+        ->autoClose(30000);
         return redirect()->back();
     }
+
+    public function delete_service($id)
+    {
+        $service = Service::findOrFail($id);
+        $service->delete();
+        
+        Alert::toast('Service Deleted Successfully!', 'success')
+            ->position('top-end')
+            ->timerProgressBar()
+            ->autoClose(3000);
+        
+        return redirect()->back();
+    }
+
 
     public function add_on()
     {
@@ -179,22 +205,23 @@ class AdminController extends Controller
 
     public function all_appointments(Request $request)
     {
-        $query = Appointment::with(['service', 'cleaner']);
+        $query = Appointment::with('employee');
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-    
-            $query->whereHas('service', function($q) use ($search) {
-                $q->where('service_name', 'like', "%$search%");
-            })->orWhereHas('cleaner', function($q) use ($search) {
-                $q->where('name', 'like', "%$search%");
+    if ($request->has('search') && !empty($request->search)) {
+        $search = $request->search;
+
+        // Filtering only on employee and status for now
+        $query->where(function($q) use ($search) {
+            $q->whereHas('employee', function ($q2) use ($search) {
+                $q2->where('name', 'like', "%$search%");
             })->orWhere('status', 'like', "%$search%")
               ->orWhereDate('appointment_date', $search);
-        }
-    
-        $appointments = $query->orderBy('appointment_date', 'desc')->paginate(2);
-    
-        return view('admin.appointments.index', compact('appointments'));
+        });
+    }
+
+    $appointments = $query->orderBy('appointment_date', 'desc')->paginate(10);
+
+    return view('admin.appointments.index', compact('appointments'));
     }
 
 
@@ -255,7 +282,7 @@ class AdminController extends Controller
     {
         $customer = User::where('role', 'customer')->findOrFail($id);
 
-        $appointments = Appointment::with(['service', 'cleaner'])
+        $appointments = Appointment::with(['service', 'Employee'])
             ->where('customer_id', $customer->id)
             ->latest()
             ->paginate(10);

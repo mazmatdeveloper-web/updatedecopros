@@ -10,59 +10,73 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('update.availability', $appointments->id) }}" method="POST">
+                    <form action="{{ route('update.availability', $appointment->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <input type="hidden" name="appointment_id" value="{{ $appointments->id ?? '' }}">
+                        <input type="hidden" name="appointment_id" value="{{ $appointment->id ?? '' }}">
                             <!-- Service Name -->
-                                <div class="mb-3">
-                                    <label for="service_name" class="form-label fw-semibold">Service Name</label>
-                                    <input type="text" class="form-control" id="service_name" name="service_name"
-                                        value="{{ old('service_name', $appointments->service->service_name ?? '') }}" readonly>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Select Services</label>
+                                <div class="form-check">
+                                    @foreach($services as $service)
+                                        <input 
+                                            class="form-check-input" 
+                                            type="checkbox" 
+                                            name="service_ids[]" 
+                                            value="{{ $service->id }}" 
+                                            id="service_{{ $service->id }}"
+                                            {{ in_array($service->id, $selectedServiceIds) ? 'checked' : '' }}
+                                        >
+                                        <label class="form-check-label" for="service_{{ $service->id }}">
+                                            {{ $service->service_name }}
+                                        </label>
+                                        <br>
+                                    @endforeach
                                 </div>
+                            </div>
 
                                 <!-- Status -->
                                 <div class="mb-3">
                                     <label for="status" class="form-label fw-semibold">Appointment Status</label>
                                     <select class="form-select" id="status" name="status">
                                         @foreach(['pending', 'confirmed', 'completed', 'cancelled'] as $status)
-                                            <option value="{{ $status }}" {{ (old('status', $appointments->status) === $status) ? 'selected' : '' }}>
+                                            <option value="{{ $status }}" {{ (old('status', $appointment->status) === $status) ? 'selected' : '' }}>
                                                 {{ ucfirst($status) }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <!-- Cleaner -->
+                                <!-- employee -->
                                 <div class="mb-3">
-                                    <label for="cleaner" class="form-label fw-semibold">Assigned Cleaner</label>
-                                    <select class="form-select" id="cleaner" name="cleaner">
-                                        <option value="">Select Cleaner</option>
-                                        @foreach($cleaners as $cleaner)
-                                            <option value="{{ $cleaner->id }}"
-                                                {{ $appointments->cleaner_id == $cleaner->id ? 'selected' : '' }}>
-                                                {{ $cleaner->name }}
+                                    <label for="employee" class="form-label fw-semibold">Assigned employee</label>
+                                    <select class="form-select" id="employee" name="employee">
+                                        <option value="">Select employee</option>
+                                        @foreach($employees as $employee)
+                                            <option value="{{ $employee->id }}"
+                                                {{ $appointment->employee_id == $employee->id ? 'selected' : '' }}>
+                                                {{ $employee->name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" id="cleaner_id" name="cleaner_id" value="{{ $appointments->cleaner_id }}">
+                                    <input type="hidden" id="employee_id" name="employee_id" value="{{ $appointment->employee_id }}">
                                 </div>
 
                                 <div class="row">
                                     <!-- Date -->
                                 <div class="mb-3 col-md-6">
-                                    <label for="appointment_date" class="form-label fw-semibold">Appointment Date <span class='badge bg-success'>{{ $appointments->appointment_date }}</span></label>
+                                    <label for="appointment_date" class="form-label fw-semibold">Appointment Date <span class='badge bg-success'>{{ $appointment->appointment_date }}</span></label>
                                     <input type="date" class="form-control" id="appointment_date" name="appointment_date"
-                                        value="{{ old('appointment_date', $appointments->appointment_date ?? '') }}">
+                                        value="{{ old('appointment_date', $appointment->appointment_date ?? '') }}">
                                 </div>
 
                                 <!-- Time Slot -->
                                 <div class="mb-3 col-md-6">
-                                    <label for="start_time" class="form-label fw-semibold">Time Slot <span class='badge bg-success'>{{$appointments->start_time}} - {{$appointments->end_time}}</span></label>
+                                    <label for="start_time" class="form-label fw-semibold">Time Slot <span class='badge bg-success'>{{$appointment->start_time}} - {{$appointment->end_time}}</span></label>
                                     <select class="form-select" id="start_time" name="start_time">
                                         <option value="">Select a time</option>
-                                        <option value="{{ \Carbon\Carbon::parse($appointments->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointments->end_time)->format('H:i')  }}" selected>{{ \Carbon\Carbon::parse($appointments->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointments->end_time)->format('H:i')  }}</option>
+                                        <option value="{{ \Carbon\Carbon::parse($appointment->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointment->end_time)->format('H:i')  }}" selected>{{ \Carbon\Carbon::parse($appointment->start_time)->format('H:i')  }} - {{ \Carbon\Carbon::parse($appointment->end_time)->format('H:i')  }}</option>
                                         <!-- Time slots will be populated via JS -->
                                     </select>
                                 </div>
@@ -72,21 +86,21 @@
                                 <div class="mb-3">
                                     <label for="start_time" class="form-label fw-semibold">Address</label>
                                     <input type="text" name='address' id="autocomplete" class="zipcode-field form-control"
-                                    value='{{ $appointments->address }}'>
-                                    <input type="hidden" id="old_address" value="{{ $appointments->address ?? '' }}">
+                                    value='{{ $appointment->address }}'>
+                                    <input type="hidden" id="old_address" value="{{ $appointment->address ?? '' }}">
                                     <div id="address-error" class="text-danger mt-1" style="display:none;"></div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="notes" class="form-label fw-semibold">Additional Notes</label>
-                                   <textarea name="notes" id="notes" class='form-control' cols="30" rows="3">{{ $appointments->additional_notes }}</textarea>
+                                   <textarea name="notes" id="notes" class='form-control' cols="30" rows="3">{{ $appointment->additional_notes }}</textarea>
                                 </div>
 
                                 <!-- Price -->
                                 <div class="mb-3">
                                     <label for="price" class="form-label fw-semibold">Total Price ($)</label>
                                     <input type="number" step="0.01" class="form-control" id="price" name="price"
-                                        value="{{ old('price', $appointments->total_price ?? '') }}">
+                                        value="{{ old('price', $appointment->total_price ?? '') }}">
                                 </div>
 
                                 <!-- Submit Button -->
@@ -104,21 +118,21 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const cleanerSelect = document.getElementById('cleaner');
+        const employeeSelect = document.getElementById('employee');
         const dateInput = document.getElementById('appointment_date');
         const slotSelect = document.getElementById('start_time');
 
         async function fetchSlots() {
-            const cleanerId = cleanerSelect.value;
+            const employeeId = employeeSelect.value;
             const date = dateInput.value;
 
-            if (!cleanerId || !date) {
+            if (!employeeId || !date) {
                 slotSelect.innerHTML = '<option value="">Select a time</option>';
                 return;
             }
 
             try {
-                const response = await fetch(`/admin/cleaner-slots?cleaner_id=${cleanerId}&date=${date}`);
+                const response = await fetch(`/admin/employee-slots?employee_id=${employeeId}&date=${date}`);
                 const data = await response.json();
 
                 slotSelect.innerHTML = '<option value="">Select a time</option>';
@@ -137,7 +151,7 @@
             }
         }
 
-        cleanerSelect.addEventListener('change', fetchSlots);
+        employeeSelect.addEventListener('change', fetchSlots);
         dateInput.addEventListener('change', fetchSlots);
     });
 </script>

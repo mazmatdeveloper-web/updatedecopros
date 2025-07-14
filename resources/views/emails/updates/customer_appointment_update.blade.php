@@ -28,9 +28,23 @@
 
       <!-- Booking Info -->
       <div style="background:#f9fafc; padding:24px; border-radius:12px; border:1px solid #e6eaf0;">
-        <h3 style="margin-top:0; font-size:16px; font-weight:600; color:#333;">Booking Summary</h3>
-        <p style="margin:8px 0;"><strong>Cleaner:</strong> {{ $appointment->cleaner->name }}</p>
-        <p style="margin:8px 0;"><strong>Service:</strong> {{ $appointment->service->service_name }}</p>
+      <div style='display:flex;justify-content:space-between;align-items:start;'>
+      <h3 style="margin-top:0; font-size:16px; font-weight:600; color:#333;">Booking Summary</h3>
+      <span style='background: #1a73e8;display: inline-block;padding: 5px 10px;border-radius: 6px;font-size: 13px !important;font-weight:bold;color: white !important;'>
+      {{ $appointment->status }}
+      </span>
+      </div>  
+     
+        <p style="margin:8px 0;"><strong>Employee:</strong> {{ $appointment->employee->name }}</p>
+        @php
+              $serviceIds = json_decode($appointment->service_id, true);
+              $services = \App\Models\Service::whereIn('id', $serviceIds ?? [])->pluck('service_name')->toArray();
+          @endphp
+
+          <p style="margin:8px 0;">
+              <strong>Service{{ count($services) > 1 ? 's' : '' }}:</strong>
+              {{ implode(', ', $services) }}
+          </p>          
         @php
             use Carbon\Carbon;
             $date = Carbon::parse($appointment->appointment_date)->format('D, M d');
@@ -40,11 +54,6 @@
 
         <p style="margin:8px 0;">
             <strong>Date & Time:</strong> {{ $date }} at {{ $startTime }} - {{ $endTime }}
-        </p>
-        <p><strong>Dimensions:</strong>
-            {{ $appointment->bedsArea->beds ?? '-' }} BD /
-            {{ $appointment->no_of_baths }} BR /
-            {{ $appointment->bedsArea->no_of_sqft ?? '-' }} sqft
         </p>
         <p style="margin:8px 0;"><strong>Address:</strong> {{ $appointment->address }}</p>
         <p style="margin:8px 0;"><strong>Additional Notes:</strong> {{ $appointment->additional_notes }}</p>

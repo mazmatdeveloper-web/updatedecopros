@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     protected $fillable =[
-        'cleaner_id',
+        'employee_id',
         'customer_id',
         'appointment_date',
         'start_time',
@@ -24,9 +24,9 @@ class Appointment extends Model
         'additional_notes',
         'reminder_sent'
         ];
-    public function cleaner()
+    public function employee()
     {
-        return $this->belongsTo(Cleaner::class);
+        return $this->belongsTo(Employee::class);
     }
     public function service()
     {
@@ -36,8 +36,5 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function bedsArea()
-    {
-        return $this->belongsTo(BedAreaSqft::class, 'beds_area_sqft_id');
-    }
+   
 }

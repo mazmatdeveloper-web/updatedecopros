@@ -28,8 +28,8 @@
     </script>
     @endif
 
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                    <table class='table' border="1" cellpadding="10" cellspacing="0" style='width:100%;'>
@@ -37,27 +37,36 @@
                             <tr>
                                 <th>#</th>
                                 <th>Service</th>
-                                <th>Description</th>
                                 <th>Price</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($services as $index => $service)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $service->service_name }}</td>
-                                    <td>
-                                      @if($service->description == null)
-                                      --
-                                      @else
-                                      {{ $service->description }}
-                                      @endif
+                                    <td> 
+                                        <div class='d-flex align-items-center gap-2'>
+                                        @if ($service->service_image)
+                                            <img style='width:50px;' src="{{ asset('storage/' . $service->service_image) }}" alt="Service Image" class="employee-table-profile-picture">
+                                        @endif   
+                                        {{ $service->service_name }}
+                                        </div>
                                     </td>
                                     <td>${{ $service->price }}</td>
+                                    <td>
+                                       <form action="{{ route('delete.service', $service->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this service?');">
+                                          @csrf
+                                          @method('DELETE')
+                                          <button type="submit" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"> 
+                                            <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                        </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3">No ZIP codes found.</td>
+                                    <td colspan="4" class='text-center'>No Service found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -82,7 +91,7 @@
 
       <!-- Modal Body with Form -->
       <div class="modal-body">
-        <form action="{{ route('insert.service') }}" method='POST'>
+        <form action="{{ route('insert.service') }}" method='POST' enctype="multipart/form-data">
           @csrf
           <div class="mb-3">
             <label class="form-label">Service Name</label>
@@ -93,8 +102,8 @@
             <input type="text" name="price" class="form-control" placeholder="$$$">
           </div>
           <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea name="description" id="description" class='form-control' rows="4"></textarea>
+            <label class="form-label">Service Image</label>
+            <input type="file" name="service_image" class="form-control">
           </div>
           <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">Submit</button>

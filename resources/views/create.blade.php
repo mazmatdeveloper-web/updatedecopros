@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2>Set Cleaner Availability</h2>
+    <h2>Set employee Availability</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -13,13 +13,13 @@
     <form method="POST" action="{{ route('availability.store') }}">
         @csrf
 
-        <!-- Cleaner Selection -->
+        <!-- employee Selection -->
         <div class="mb-3">
-            <label for="cleaner_id" class="form-label">Cleaner</label>
-            <select name="cleaner_id" class="form-control" required>
-                <option value="">Select Cleaner</option>
-                @foreach($cleaners as $cleaner)
-                    <option value="{{ $cleaner->id }}">{{ $cleaner->name }}</option>
+            <label for="employee_id" class="form-label">employee</label>
+            <select name="employee_id" class="form-control" required>
+                <option value="">Select employee</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}">{{ $employee->name }}</option>
                 @endforeach
             </select>
         </div>

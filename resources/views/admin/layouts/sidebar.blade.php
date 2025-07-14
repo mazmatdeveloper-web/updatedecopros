@@ -4,9 +4,11 @@
   </button>
   <div>
     <a href="#" class="sidebar-logo">
-      <img src="{{asset('ecoproz-logo.png')}}" alt="EcoProz Logo" class="light-logo">
+      <!-- <img src="{{asset('ecoproz-logo.png')}}" alt="EcoProz Logo" class="light-logo">
       <img src="{{asset('ecoproz-logo.png')}}" alt="EcoProz Logo" class="dark-logo">
       <img src="{{asset('ecoproz-logo.png')}}" alt="EcoProz Logo" class="logo-icon">
+     -->
+     A1 Classic Garage
     </a>
   </div>
   <div class="sidebar-menu-area">
@@ -18,13 +20,13 @@
         </a>
       </li>
       <li>
-        <a href="{{ route('all.cleaners') }}">
+        <a href="{{ route('all.employees') }}">
         <iconify-icon icon="solar:user-linear" class="menu-icon"></iconify-icon>
-          <span>Cleaners</span>
+          <span>employees</span>
         </a>
       </li>
       <li>
-        <a href="{{ route('add.cleaner.availability') }}">
+        <a href="{{ route('add.employee.availability') }}">
         <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
           <span>Availability</span>
         </a>
@@ -52,6 +54,12 @@
         <a href="{{ route('all.customers') }}">
         <iconify-icon icon="solar:user-linear" class="menu-icon"></iconify-icon>
           <span>Customers</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('all.services') }}">
+        <iconify-icon icon="material-symbols:map-outline" class="menu-icon"></iconify-icon>
+          <span>Services</span>
         </a>
       </li>
     </ul>

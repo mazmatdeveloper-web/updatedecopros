@@ -15358,3 +15358,17 @@ td.fc-header-center {
   background-color: rgba(255,255,255,0.7);
   z-index: -1;
 }
+.employee-display img.employee-profile-picture {
+  width: 70px;
+  border-radius: 50px;
+  object-fit: contain !important;
+  height: 70px;
+  box-shadow: 0px 0px 18px #d3d3d321;
+  background: white;
+}
+.service-checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}

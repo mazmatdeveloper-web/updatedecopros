@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cleaner;
+use App\Models\Employee;
 use App\Models\AvailableDate;
 use App\Models\RecurringAvailability;
 use App\Models\AvailableTimeSlot;
@@ -12,15 +12,15 @@ class AvailabilityController extends Controller
 {
     public function create()
     {
-        $cleaners = Cleaner::all();
-        return view('create', compact('cleaners'));
+        $employees = Employee::all();
+        return view('create', compact('employees'));
     }
 
     public function store(Request $request)
     {
         try {
             $request->validate([
-                'cleaner_id' => 'required|exists:cleaners,id',
+                'employee_id' => 'required|exists:Employees,id',
                 
                 'recurring' => 'nullable|array',
                 'recurring.*.day' => 'nullable|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
@@ -36,14 +36,14 @@ class AvailabilityController extends Controller
                 'specific.*.time_slots.*.interval' => 'nullable|integer|min:1',
             ]);
 
-            $cleanerId = $request->cleaner_id;
+            $EmployeeId = $request->employee_id;
 
             // Save recurring slots
             if ($request->filled('recurring')) {
                 foreach ($request->recurring as $rule) {
                     if (!empty($rule['day']) && !empty($rule['start_time']) && !empty($rule['end_time'])) {
                         RecurringAvailability::create([
-                            'cleaner_id' => $cleanerId,
+                            'employee_id' => $EmployeeId,
                             'day_of_week' => $rule['day'],
                             'start_time' => $rule['start_time'],
                             'end_time' => $rule['end_time'],
@@ -58,7 +58,7 @@ class AvailabilityController extends Controller
                 foreach ($request->specific as $dateEntry) {
                     if (!empty($dateEntry['date']) && !empty($dateEntry['time_slots'])) {
                         $availableDate = AvailableDate::firstOrCreate([
-                            'cleaner_id' => $cleanerId,
+                            'employee_id' => $EmployeeId,
                             'dates' => $dateEntry['date'],
                         ]);
 

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class AvailableDate extends Model
 {
     protected $fillable =[
-        'cleaner_id',
+        'employee_id',
         'dates'
     ];
     public function cleaner()
     {
-        return $this->belongsTo(Cleaner::class);
+        return $this->belongsTo(Employee::class);
     }
 
     public function timeSlots()

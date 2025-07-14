@@ -4,39 +4,50 @@
 
 
 
+@php
+    $backUrl = route('quote.extended', [
+        'employee' => $employee->id,
+        'slot' => $slot,
+        'selecteddate' => $selectedDate,
+    ] + collect(json_decode($selectedServices, true))->pluck('id')->mapWithKeys(fn($id) => ["services[]" => $id])->all()
+      + collect(json_decode($selectedAddons, true))->pluck('id')->mapWithKeys(fn($id) => ["addons[]" => $id])->all()
+    );
+@endphp
 
 
 <!-- new code --> 
 <div class="container my-5">
-@if(session('error'))
+@if ($errors->any())
     <div class="alert alert-danger">
-        {{ session('error') }}
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif
     <div class="row justify-content-center">
       <div class="col-lg-10">
+      <a href="{{ $backUrl }}" class="btn btn-secondary mb-3">← Back</a>
+
         <div class="d-flex summary-wrapper row-cols-md-2 flex-md-row flex-column">
 
           <!-- Left Panel -->
           <div class="left-panel col-md-6">
             <h4 class="mb-4">Service Details</h4>
 
-            <div class="cleaner-profile-selected">
+            <div class="employee-profile-selected">
                         <div class="profile-picturebox">
-                                @if ($cleaner->profile_picture)
-                                    <img src="{{ asset('storage/' . $cleaner->profile_picture) }}" alt="Profile Picture" width="150">
+                                @if ($employee->profile_picture)
+                                    <img src="{{ asset('storage/' . $employee->profile_picture) }}" alt="Profile Picture" width="150">
                                 @endif
                         </div>
-                        <div class="cleaner-name-box">
-                            <h4>{{$cleaner->name}}</h4>
-                            <p>{{$service}}</p>
+                        <div class="employee-name-box">
+                            <h4>{{$employee->name}}</h4>
                         </div>
                     </div>
                     
-            <div class="icon-item">
-              <span><i class="bi bi-house-door-fill"></i> Dimensions</span>
-              <p class='mb-0'><span class='selected-beds'>{{ $beds }}</span> BD / <span class='selected-baths'>{{$baths}}</span> BA / <span class='selected-area'>{{$area_sqft}}</span> sqft</p>
-            </div>
+          
            
 
             <div class="icon-item">
@@ -49,22 +60,21 @@
                 {{ $formattedDate }} at {{ $slot }}
             </span>
             </div>
-            <div class="icon-item">
-              <span><i class="bi bi-repeat"></i> Frequency</span>
-              @if($frequency === 'one_time')
-                <span class='text-end'>One Time</span>
-                @elseif($frequency === 'weekly')
-                <span class='text-end'>Every Week</span>
-                @elseif($frequency === 'biweekly')
-                <span class='text-end'>Biweekly</span>
-                @elseif($frequency === 'monthly')
-                <span class='text-end'>Every Month</span>
+
+            @if($selectedServices->isNotEmpty())
+            <h5 class="mt-4 mb-3">Services</h5>
+                <ul class="additional-list p-0">
+                @if($selectedServices->isNotEmpty())
+                    @foreach($selectedServices as $service)
+                        <li>{{ $service->service_name }}</li>
+                    @endforeach
                 @endif
-            </div>
+                </ul>
+            @endif
 
            
             @if($selectedAddons->isNotEmpty())
-            <h5 class="mt-4 mb-3">Additional Services</h5>
+            <h5 class="mt-4 mb-3">Addons</h5>
                 <ul class="additional-list p-0">
                 @if($selectedAddons->isNotEmpty())
                     @foreach($selectedAddons as $addon)
@@ -83,47 +93,19 @@
               <span>One-time Price</span>
               <span>${{number_format($oneTimePrice, 2)}}</span>
             </div>
-            <div class="price-item">
-              
-             @if(isset($discountAmounts[$frequency]))
-                
-                    @if($frequency === 'weekly')
-                           
-                        <span>Weekly Discount (20% off)</span>
-                        <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
-                        
-                        @elseif($frequency === 'biweekly')
-                        
-                        <span>Biweekly Discount (10% off)</span>
-                        <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
-                        
-                        @elseif($frequency === 'monthly')
-                       
-                        <span>Monthly Discount (10% off)</span>
-                    <span class="text-end text-success">- ${{ number_format($discountAmounts[$frequency], 2) }}</span>
-                    
-                    @endif
-            
-            @endif
-
-            </div>
-            <div class="price-item price-total">
-              <span>Total</span>
-              <span class='text-end'>${{number_format($discountedPrices[$frequency], 2)}}</span>
-            </div>
+        
 
             @auth
                         @if(Auth::user()->role !== 'admin')
                         <form action="{{ route('book.appointment') }}" method='POST' id='payment-form'>
                             @csrf
-                            <input type="hidden" name='cleaner_id' value='{{ $cleaner->id }}'>
+                            <input type="hidden" name='employee_id' value='{{ $employee->id }}'>
                             <input type="hidden" name='customer_id' value='{{ Auth::user()->id }}'>
-                            <input type="hidden" name='beds_area_sqft_id' value='{{ $bedPriceModel->id ?? "" }}'>
-                            <input type="hidden" name='no_of_baths' value='{{ $baths ?? 0 }}'>
-                            <input type="hidden" name='service_id' value='{{ $servicePriceModel->id ?? "" }}'>
-                            <input type="hidden" name='discount_label' value='{{ $frequency }}'>
-                            <input type="hidden" name='discount_price' value='{{ number_format($discountAmounts[$frequency], 2) }}'>
-                            <input type="hidden" name='total_price' value='{{ number_format($discountedPrices[$frequency], 2) }}'>
+
+                            @php
+                                $serviceId = collect(json_decode($selectedServices, true))->pluck('id')->toJson();
+                            @endphp
+                            <input type="hidden" name="service_id" value="{{ $serviceId }}">
                             <input type="hidden" name='appointment_date' value='{{ $selectedDate }}'>
                             @php
                                 $parts = explode(' - ', $slot);
@@ -133,15 +115,16 @@
 
                             <input type="hidden" name="start_time" value="{{ $start_time }}">
                             <input type="hidden" name="end_time" value="{{ $end_time }}">
+                            <input type="hidden" name="total_price" value="{{ $totalPrice }}">
                             @php
                                 $addonIds = collect(json_decode($selectedAddons, true))->pluck('id')->toJson();
                             @endphp
 
-                            <input type="hidden" name="addon_ids" value='{{ $addonIds }}'>
+                            <input type="hidden" name="addon_ids" value="{{ $addonIds }}">
                             <label class='mt-3' for="address">Address</label>
                             <input name="address" class='form-control bg-white text-dark' placeholder='Enter Your Address' id="address">
                             <label class='mt-2' for="additional_notes">Additional Notes</label>
-                            <textarea name="additional_notes" class='form-control bg-white text-dark' placeholder='Enter Notes for cleaner' id="additional_notes" cols="30" rows="5"></textarea>
+                            <textarea name="additional_notes" class='form-control bg-white text-dark' placeholder='Enter Notes for employee' id="additional_notes" cols="30" rows="5"></textarea>
                            
                             {{-- Stripe Card Element --}}
                             <div class="mt-3">
@@ -207,6 +190,10 @@
                     <div class='form-group mt-2'>
                         <label>Email</label>
                         <input type="email" name='email' placeholder='Email Address' class='w-100'>
+                    </div>
+                    <div class='form-group mt-2'>
+                        <label>Phone</label>
+                        <input type="tel" name='phone' placeholder='Phone Number' class='w-100'>
                     </div>
                     <div class='form-group mt-2'>
                         <label>Password</label>

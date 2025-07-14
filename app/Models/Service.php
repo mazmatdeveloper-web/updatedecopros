@@ -10,11 +10,11 @@ class Service extends Model
         'service_name',
         'price',
         'description',
-        'cleaner_id'
+        'service_image'
     ];
     
-    public function cleaner()
+    public function employees()
     {
-        return $this->belongsTo(Cleaner::class);
+        return $this->belongsToMany(Employee::class, 'employee_service');
     }
 }
